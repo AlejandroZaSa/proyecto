@@ -1,9 +1,6 @@
 package co.edu.uniquindio.proyecto.modelo.entidades;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
@@ -13,13 +10,22 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Cuenta implements Serializable{
+public class RespuestaPaciente implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private int id;
 
-    private String email;
-    private String contraseña;
+    private String mensaje;
+
+    @ManyToOne
+    private Paciente paciente;
+
+    @ManyToOne
+    private Pqrs pqrs;
+    @OneToOne
+    private RespuestaAdmin respuestaAdmin;
+
+
 }

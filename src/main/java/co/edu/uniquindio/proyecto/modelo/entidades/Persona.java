@@ -1,8 +1,6 @@
 package co.edu.uniquindio.proyecto.modelo.entidades;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
@@ -13,13 +11,16 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Cuenta implements Serializable{
+public class Persona extends Cuenta implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private int id;
+    private int cedula;
 
-    private String email;
-    private String contraseña;
+    private String nombreCompleto;
+    private String telefono;
+    private String foto;
+    private Ciudad ciudad;
+    private boolean estado;
+
 }
