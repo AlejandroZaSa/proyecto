@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Medico extends Persona implements Serializable{
 
     private float costoConsulta;
@@ -26,4 +25,5 @@ public class Medico extends Persona implements Serializable{
 
     @OneToMany(mappedBy = "medico")
     private List<Cita> citas;
+
 }

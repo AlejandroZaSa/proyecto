@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Horario {
+public class Horario implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
