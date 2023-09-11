@@ -15,4 +15,5 @@ public class Administrador extends Cuenta implements Serializable{
 
     @OneToMany(mappedBy = "administrador")
     private List<RespuestaAdmin> respuestasAdmin;
+
 }
