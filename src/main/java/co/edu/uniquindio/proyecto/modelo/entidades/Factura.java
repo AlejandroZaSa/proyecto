@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -17,7 +17,7 @@ public class Factura implements Serializable{
     @EqualsAndHashCode.Include
     private int id;
 
-    private Date fecha;
+    private LocalDate fecha;
     private String concepto;
     private float valor;
     private String estado;

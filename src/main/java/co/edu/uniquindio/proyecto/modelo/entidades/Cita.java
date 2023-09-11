@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -19,8 +19,8 @@ public class Cita implements Serializable{
     private int id;
 
     private String motivo;
-    private Date fechaCreacion;
-    private Date fecha;
+    private LocalDate fechaCreacion;
+    private LocalDate fecha;
     private String hora;
     private EstadoCita estadoCita;
 

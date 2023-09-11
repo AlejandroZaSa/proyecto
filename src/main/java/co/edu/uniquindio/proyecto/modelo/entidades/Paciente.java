@@ -6,6 +6,7 @@ import jakarta.persistence.OneToMany;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Paciente extends Persona implements Serializable{
 
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String alergias;
     private TipoSangre tipoSangre;
     private Eps eps;

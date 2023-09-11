@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -19,7 +19,7 @@ public class Consulta implements Serializable{
     @EqualsAndHashCode.Include
     private int id;
 
-    private Date fecha;
+    private LocalDate fecha;
     private String notasMedico;
     private String diagnostico;
     private String sintomas;
