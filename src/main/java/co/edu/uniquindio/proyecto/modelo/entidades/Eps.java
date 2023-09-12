@@ -1,12 +1,10 @@
 package co.edu.uniquindio.proyecto.modelo.entidades;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,6 +20,9 @@ public class Eps implements Serializable{
 
     private String nombre;
     private float porcentajeConsulta;
+
+    @OneToMany(mappedBy = "eps")
+    private List<Paciente> pacientes;
 
     public Eps(String nombre, float porcentajeConsulta) {
         this.nombre = nombre;

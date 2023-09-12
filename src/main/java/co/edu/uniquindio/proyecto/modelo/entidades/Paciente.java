@@ -1,6 +1,7 @@
 package co.edu.uniquindio.proyecto.modelo.entidades;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 
@@ -17,6 +18,8 @@ public class Paciente extends Persona implements Serializable{
     private LocalDate fechaNacimiento;
     private String alergias;
     private TipoSangre tipoSangre;
+
+    @ManyToOne
     private Eps eps;
 
     @OneToMany(mappedBy = "paciente")

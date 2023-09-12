@@ -20,7 +20,7 @@ public class Factura implements Serializable{
     private LocalDate fecha;
     private String concepto;
     private float valor;
-    private boolean estado;
+    private EstadoFactura estado;
 
     @OneToOne()
     private Consulta consulta;
