@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -21,7 +22,7 @@ public class Cita implements Serializable{
     private String motivo;
     private LocalDate fechaCreacion;
     private LocalDate fecha;
-    private String hora;
+    private LocalTime hora;
     private EstadoCita estadoCita;
 
     @ManyToOne

@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalTime;
+
 
 @Entity
 @Getter
@@ -18,8 +19,8 @@ public class Horario implements Serializable{
     @EqualsAndHashCode.Include
     private int id;
 
-    private String horaInicio;
-    private String horaFin;
+    private LocalTime horaInicio;
+    private LocalTime horaFin;
     private String dia;
 
     @ManyToOne

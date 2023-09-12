@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -19,7 +19,7 @@ public class Pqrs implements Serializable {
     @EqualsAndHashCode.Include
     private int numeroRadicado;
 
-    private Date fechaCreacion;
+    private LocalDate fechaCreacion;
     private String detalle;
 
     @ManyToOne
