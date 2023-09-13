@@ -18,6 +18,7 @@ public class RespuestaPaciente implements Serializable {
     @EqualsAndHashCode.Include
     private int id;
 
+    @Lob
     private String mensaje;
 
     private LocalDateTime fecha;

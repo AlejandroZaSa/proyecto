@@ -18,6 +18,8 @@ public class Tratamiento implements Serializable{
     private int id;
 
     private int dosis;
+
+    @Lob
     private String observaciones;
 
     @ManyToOne

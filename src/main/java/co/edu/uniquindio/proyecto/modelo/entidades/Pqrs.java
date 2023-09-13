@@ -20,6 +20,8 @@ public class Pqrs implements Serializable {
     private int numeroRadicado;
 
     private LocalDate fechaCreacion;
+
+    @Lob
     private String detalle;
 
     @ManyToOne
