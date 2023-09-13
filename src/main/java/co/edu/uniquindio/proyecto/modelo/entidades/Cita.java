@@ -19,7 +19,9 @@ public class Cita implements Serializable{
     @EqualsAndHashCode.Include
     private int id;
 
+    @Lob
     private String motivo;
+
     private LocalDate fechaCreacion;
     private LocalDate fecha;
     private LocalTime hora;

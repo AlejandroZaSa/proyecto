@@ -2,6 +2,6 @@ package co.edu.uniquindio.proyecto.modelo.entidades;
 
 public enum EstadoFactura {
 
-    APROBADA, CANCELADA, RECHAZADA, ENVIADA
+    APROBADA, CANCELADA, RECHAZADA, ENVIADA, GENERADA
 
 }

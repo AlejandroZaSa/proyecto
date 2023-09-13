@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -17,7 +18,10 @@ public class RespuestaAdmin implements Serializable {
     @EqualsAndHashCode.Include
     private int id;
 
+    @Lob
     private String mensaje;
+
+    private LocalDateTime fecha;
 
     @ManyToOne
     private Administrador administrador;

@@ -24,7 +24,6 @@ public class Pqrs implements Serializable {
 
     @ManyToOne
     private Consulta consulta;
-    //aca lo crea en mysql como un entero o que?
     private EstadoPqrs estadoPqrs;
 
     @OneToMany(mappedBy = "pqrs")

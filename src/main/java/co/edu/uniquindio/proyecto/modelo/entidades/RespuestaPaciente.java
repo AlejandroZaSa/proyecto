@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,6 +19,8 @@ public class RespuestaPaciente implements Serializable {
     private int id;
 
     private String mensaje;
+
+    private LocalDateTime fecha;
 
     @ManyToOne
     private Paciente paciente;
