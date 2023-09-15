@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.modelo.entidades;
 
+import co.edu.uniquindio.proyecto.modelo.enums.Medicamento;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class Tratamiento implements Serializable{
     private String observaciones;
 
     @ManyToOne
+    @Column(nullable = false)
     private Consulta consulta;
 
     private Medicamento medicamento;

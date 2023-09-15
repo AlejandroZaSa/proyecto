@@ -1,9 +1,7 @@
 package co.edu.uniquindio.proyecto.modelo.entidades;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
@@ -16,14 +14,18 @@ import java.util.List;
 @NoArgsConstructor
 public class Paciente extends Persona implements Serializable{
 
+    @Column(nullable = false)
     private LocalDate fechaNacimiento;
 
     @Lob
+    @Column(nullable = false)
     private String alergias;
 
+    @Column(nullable = false)
     private TipoSangre tipoSangre;
 
     @ManyToOne
+    @Column(nullable = false)
     private Eps eps;
 
     @OneToMany(mappedBy = "paciente")

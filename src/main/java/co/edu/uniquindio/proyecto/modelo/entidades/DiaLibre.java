@@ -18,9 +18,14 @@ public class DiaLibre implements Serializable {
     @EqualsAndHashCode.Include
     private int id;
 
+    @Column(nullable = false)
     private LocalDate fecha;
+
+    //duda si puede ser otra enumeracion
+    @Column(nullable = false)
     private boolean estado;
 
+    @Column(nullable = false)
     @ManyToOne
     private Medico medico;
 }

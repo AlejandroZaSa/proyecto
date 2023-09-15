@@ -19,17 +19,26 @@ public class Consulta implements Serializable{
     @EqualsAndHashCode.Include
     private int id;
 
+    @Column(nullable = false)
     private LocalDate fecha;
+
+    @Column(nullable = false)
+    @Lob
     private String notasMedico;
+
+    @Column(nullable = false)
+    @Lob
     private String diagnostico;
+
+    @Column(nullable = false)
+    @Lob
     private String sintomas;
 
+    @Column(nullable = false)
     @OneToOne
     private Cita cita;
 
-    @OneToMany(mappedBy = "consulta")
-    private List<Pqrs> pqrsList;
-
+    @Column(nullable = false)
     @OneToOne(mappedBy = "consulta")
     private Factura factura;
 

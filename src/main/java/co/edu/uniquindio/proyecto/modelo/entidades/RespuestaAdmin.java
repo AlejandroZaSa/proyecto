@@ -19,14 +19,18 @@ public class RespuestaAdmin implements Serializable {
     private int id;
 
     @Lob
+    @Column(nullable = false)
     private String mensaje;
 
+    @Column(nullable = false)
     private LocalDateTime fecha;
 
     @ManyToOne
+    @Column(nullable = false)
     private Administrador administrador;
 
     @ManyToOne
+    @Column(nullable = false)
     private Pqrs pqrs;
 
     @OneToOne(mappedBy = "respuestaAdmin")

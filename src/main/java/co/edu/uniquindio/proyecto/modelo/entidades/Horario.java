@@ -19,8 +19,14 @@ public class Horario implements Serializable{
     @EqualsAndHashCode.Include
     private int id;
 
+    @Column(nullable = false)
     private LocalTime horaInicio;
+
+    @Column(nullable = false)
     private LocalTime horaFin;
+
+    //dia puede ser enum
+    @Column(nullable = false)
     private String dia;
 
     @ManyToOne

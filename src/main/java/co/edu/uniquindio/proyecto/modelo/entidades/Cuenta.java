@@ -18,6 +18,9 @@ public class Cuenta implements Serializable{
     @EqualsAndHashCode.Include
     private int id;
 
+    @Column(nullable = false, length = 20)
     private String email;
+
+    @Column(nullable = false, length = 20)
     private String contrasenia;
 }

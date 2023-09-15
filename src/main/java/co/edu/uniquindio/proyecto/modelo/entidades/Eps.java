@@ -18,7 +18,10 @@ public class Eps implements Serializable{
     @EqualsAndHashCode.Include
     private int id;
 
+    @Column(nullable = false, length = 20)
     private String nombre;
+
+    @Column(nullable = false)
     private float porcentajeConsulta;
 
     @OneToMany(mappedBy = "eps")

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.modelo.entidades;
 
+import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,13 +20,18 @@ public class Pqrs implements Serializable {
     @EqualsAndHashCode.Include
     private int numeroRadicado;
 
+    @Column(nullable = false)
     private LocalDate fechaCreacion;
 
     @Lob
+    @Column(nullable = false)
     private String detalle;
 
     @ManyToOne
-    private Consulta consulta;
+    @Column(nullable = false)
+    private Cita cita;
+
+    @Column(nullable = false)
     private EstadoPqrs estadoPqrs;
 
     @OneToMany(mappedBy = "pqrs")

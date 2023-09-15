@@ -18,17 +18,23 @@ public class RespuestaPaciente implements Serializable {
     @EqualsAndHashCode.Include
     private int id;
 
+    @Column(nullable = false)
     @Lob
     private String mensaje;
 
+    @Column(nullable = false)
     private LocalDateTime fecha;
 
     @ManyToOne
+    @Column(nullable = false)
     private Paciente paciente;
 
     @ManyToOne
+    @Column(nullable = false)
     private Pqrs pqrs;
+
     @OneToOne
+    @Column(nullable = false)
     private RespuestaAdmin respuestaAdmin;
 
 
