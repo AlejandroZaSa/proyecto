@@ -25,16 +25,16 @@ public class RespuestaPaciente implements Serializable {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
+    @JoinColumn(nullable = false)
     @ManyToOne
-    @Column(nullable = false)
     private Paciente paciente;
 
+    @JoinColumn(nullable = false)
     @ManyToOne
-    @Column(nullable = false)
     private Pqrs pqrs;
 
+    @JoinColumn(nullable = false)
     @OneToOne
-    @Column(nullable = false)
     private RespuestaAdmin respuestaAdmin;
 
 

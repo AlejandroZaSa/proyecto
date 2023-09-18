@@ -31,7 +31,7 @@ public class Factura implements Serializable{
     @Column(nullable = false)
     private EstadoFactura estado;
 
-    @Column(nullable = false)
-    @OneToOne()
+    @JoinColumn(nullable = false)
+    @OneToOne
     private Consulta consulta;
 }

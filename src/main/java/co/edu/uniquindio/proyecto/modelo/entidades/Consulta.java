@@ -34,11 +34,10 @@ public class Consulta implements Serializable{
     @Lob
     private String sintomas;
 
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     @OneToOne
     private Cita cita;
 
-    @Column(nullable = false)
     @OneToOne(mappedBy = "consulta")
     private Factura factura;
 

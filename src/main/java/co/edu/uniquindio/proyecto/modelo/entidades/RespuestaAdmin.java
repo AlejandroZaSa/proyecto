@@ -25,12 +25,12 @@ public class RespuestaAdmin implements Serializable {
     @Column(nullable = false)
     private LocalDateTime fecha;
 
+    @JoinColumn(nullable = false)
     @ManyToOne
-    @Column(nullable = false)
     private Administrador administrador;
 
+    @JoinColumn(nullable = false)
     @ManyToOne
-    @Column(nullable = false)
     private Pqrs pqrs;
 
     @OneToOne(mappedBy = "respuestaAdmin")

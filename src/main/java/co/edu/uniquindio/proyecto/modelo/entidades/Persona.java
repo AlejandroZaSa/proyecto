@@ -13,7 +13,7 @@ import java.io.Serializable;
 @MappedSuperclass
 public class Persona extends Cuenta implements Serializable{
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 10, unique = true)
     private String cedula;
 
     @Column(nullable = false, length = 30)

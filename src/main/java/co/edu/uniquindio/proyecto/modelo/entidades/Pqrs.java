@@ -27,8 +27,8 @@ public class Pqrs implements Serializable {
     @Column(nullable = false)
     private String detalle;
 
+    @JoinColumn(nullable = false)
     @ManyToOne
-    @Column(nullable = false)
     private Cita cita;
 
     @Column(nullable = false)

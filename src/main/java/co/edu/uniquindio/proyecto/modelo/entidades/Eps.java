@@ -27,8 +27,4 @@ public class Eps implements Serializable{
     @OneToMany(mappedBy = "eps")
     private List<Paciente> pacientes;
 
-    public Eps(String nombre, float porcentajeConsulta) {
-        this.nombre = nombre;
-        this.porcentajeConsulta = porcentajeConsulta;
-    }
 }

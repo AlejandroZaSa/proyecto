@@ -25,7 +25,6 @@ public class Paciente extends Persona implements Serializable{
     private TipoSangre tipoSangre;
 
     @ManyToOne
-    @Column(nullable = false)
     private Eps eps;
 
     @OneToMany(mappedBy = "paciente")

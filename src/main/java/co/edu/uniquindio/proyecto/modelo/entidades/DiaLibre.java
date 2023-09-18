@@ -25,7 +25,7 @@ public class DiaLibre implements Serializable {
     @Column(nullable = false)
     private boolean estado;
 
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
     @ManyToOne
     private Medico medico;
 }

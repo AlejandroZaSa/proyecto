@@ -26,9 +26,10 @@ public class Horario implements Serializable{
     private LocalTime horaFin;
 
     //dia puede ser enum
-    @Column(nullable = false)
+    @Column(nullable = false, length = 9)
     private String dia;
 
+    @JoinColumn(nullable = false)
     @ManyToOne
     private Medico medico;
 }

@@ -21,10 +21,11 @@ public class Tratamiento implements Serializable{
     private int dosis;
 
     @Lob
+    @Column(nullable = false)
     private String observaciones;
 
+    @JoinColumn(nullable = false)
     @ManyToOne
-    @Column(nullable = false)
     private Consulta consulta;
 
     private Medicamento medicamento;
