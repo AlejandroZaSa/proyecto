@@ -1,37 +1,33 @@
 package co.edu.uniquindio.proyecto.servicios;
 
-import co.edu.uniquindio.proyecto.dto.*;
+import co.edu.uniquindio.proyecto.dto.paciente.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface PacienteServicio {
 
-    String registrarse(RegistroPacienteDTO pacienteDTO) throws Exception;
+    int registrarse(RegistroPacienteDTO pacienteDTO) throws Exception;
 
     ActualizarPacienteDTO cargarDatosPaciente(int codigoPaciente);
 
-    String editarPerfil(int codigo, ActualizarPacienteDTO pacienteDTO) throws Exception;
+    int editarPerfil(int codigo, ActualizarPacienteDTO pacienteDTO) throws Exception;
 
-    String eliminarCuenta(int id) throws Exception;
+    void eliminarCuenta(int id) throws Exception;
 
-    String enviarLinkRecuperacion(String email) throws Exception;
+    List<ItemMedicoCitaDTO> filtrarMedicoCita(int especialidad, LocalDate fecha) throws Exception;
 
-    String cambiarPassword(int codigoUsuario, String nuevaPassword) throws Exception;
+    int agendarCita(CitaDTO citaDTO) throws Exception;
 
-    List<MedicoCitaDTO> filtrarMedicoCita(int especialidad, LocalDate fecha) throws Exception;
-
-    String agendarCita(CitaDTO citaDTO) throws Exception;
-
-    String crearPqrs(PQRSPacienteDTO pqrsPacienteDTO);
+    int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO);
 
     List<ItemPqrsPacienteDTO> listarPqrsPaciente(int idPaciente) throws Exception;
 
-    String responderPqrs(RespuestaPacientePqrsDTO respuestaPqrsDTO);
+    int responderPqrs(RespuestaPacientePqrsDTO respuestaPqrsDTO) throws Exception;
 
-    List<CitasPacienteDTO> listarCitasPaciente(int idPaciente) throws Exception;
+    List<ItemCitaPacienteDTO> listarCitasPaciente(int codigoPaciente) throws Exception;
 
-    List<CitasPacienteDTO> buscarCita(int nombreMedico, LocalDate fecha) throws Exception;
+    List<ItemCitaPqrsPacienteDTO> listarCitasPqrsPaciente(int idPaciente) throws Exception;
 
-    List<TratamientoDTO> verTratamiento(int codigoConsulta);
+    List<ItemConsultaPacienteDTO> buscarConsulta(int nombreMedico, LocalDate fecha) throws Exception;
 }

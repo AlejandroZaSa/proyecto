@@ -1,24 +1,23 @@
 package co.edu.uniquindio.proyecto.servicios;
 
-import co.edu.uniquindio.proyecto.dto.*;
+import co.edu.uniquindio.proyecto.dto.clinica.EmailDTO;
+import co.edu.uniquindio.proyecto.dto.medico.*;
 
 import java.util.List;
 
 public interface MedicoServicio {
-    List<CitaMedicoDTO> listarCitasPendientes(int codigoMedico) throws Exception;
+    List<ItemCitaMedicoDTO> listarCitasPendientes(int codigoMedico) throws Exception;
 
-    String atenderCita(AtencionMedicoDTO atencionMedicoDTO) throws Exception;
+    int atenderCita(AtencionMedicoDTO atencionMedicoDTO) throws Exception;
 
-    //ver historial de consultas que ya lo tiene el paciente con tratamiento se deberían compartir no?
-    List<CitaMedicoDTO> listarCitaPaciente(int codigoPaciente) throws Exception;//historial medico
+    //esta es la dudosa
+    List<ItemConsultaMedicoPacienteDTO> listarCitaPaciente(int codigoPaciente) throws Exception;
 
-    //no faltaria mandar el codigo del medico
-    String agendarDiaLibre(DiaLibreDTO diaLibreDTO) throws Exception;
+    int agendarDiaLibre(DiaLibreDTO diaLibreDTO) throws Exception;
 
-    List<CitaMedicoDTO> listarCitasRealizadasMedico(int codigo) throws Exception;
+    List<ItemConsultaMedicoPacienteDTO> listarCitasRealizadasMedico(int codigoMedico) throws Exception;
 
-    String generarFactura(FacturaDTO facturaDTO) throws Exception;
+    int generarFactura(FacturaDTO facturaDTO) throws Exception;
 
-    //no esta bien
     EmailDTO enviarCorreoFactura(FacturaDTO facturaDTO);
 }

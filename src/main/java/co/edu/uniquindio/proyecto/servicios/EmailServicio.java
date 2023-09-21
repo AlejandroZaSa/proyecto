@@ -1,6 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios;
 
-import co.edu.uniquindio.proyecto.dto.EmailDTO;
+import co.edu.uniquindio.proyecto.dto.clinica.EmailDTO;
 
 public interface EmailServicio {
 

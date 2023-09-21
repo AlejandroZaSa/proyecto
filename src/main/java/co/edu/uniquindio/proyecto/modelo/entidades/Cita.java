@@ -37,7 +37,6 @@ public class Cita implements Serializable{
     @Column(nullable = false)
     private EstadoCita estadoCita;
 
-
     @JoinColumn(nullable = false)
     @ManyToOne
     private Medico medico;
