@@ -2,21 +2,23 @@ package co.edu.uniquindio.proyecto.dto;
 
 import java.util.List;
 
-public record MedicoDTO (
+public record RegistroMedicoDTO(
 
     String cedula,
 
     String nombre,
 
+    String foto,
+
+    int ciudad,
+
     String telefono,
 
-    String ciudad,
-
-    String correo,
+    String email,
 
     String password,
 
-    String especialidad,
+    int especialidad,
 
     List<HorarioDTO> horarioDTO){
 }

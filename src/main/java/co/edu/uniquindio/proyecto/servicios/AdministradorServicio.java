@@ -6,21 +6,26 @@ import java.util.List;
 
 public interface AdministradorServicio {
 
-    int crearMedico(MedicoDTO medicoDTO) throws Exception;
+    String crearMedico(RegistroMedicoDTO medicoDTO) throws Exception;
 
-    int actualizarMedico(int codigo, MedicoDTO medico) throws Exception;
+    RegistroMedicoDTO obtenerMedico(int codigoMedico) throws Exception;
 
-    void eliminarMedico(int codigo) throws Exception;
+    String actualizarMedico(int codigoMedico, ActualizarMedicoDTO medico) throws Exception;
 
-    List<InfoMedicoAdminDTO> listarMedicos();
+    String eliminarMedico(int codigoMedico) throws Exception;
 
-    DetalleMedicoDTO obtenerMedico();
+    List<ItemMedicoDTO> listarMedicos() throws Exception;
 
-    List<PQRSAdminDTO> listarPqrs();
+    List<PQRSAdminDTO> listarPqrs() throws Exception;
 
-    String responderPqrs(RespuestaPqrsDTO respuestaPqrsDTO) throws Exception;
+    String cambiarEstadoPqrs(EstadoPqrsDTO estadoPqrsDTO) throws Exception;
 
-    DetallePqrsDTO verDetallePqrs(int codigo) throws Exception;
+    DetalleConsultaPqrsDTO mostrarDetalleConsultaPqrs(int codigoPqrs) throws Exception;
 
-    List<CitasAdminDTO> listarCitas();
+    String responderPqrs(RespuestaAdminPqrsDTO respuestaPqrsDTO) throws Exception;
+
+    List<CitasAdminDTO> listarCitas() throws Exception;
+
+    List<CitasAdminDTO> listarCitas(int codigoMedico) throws Exception;
+
 }

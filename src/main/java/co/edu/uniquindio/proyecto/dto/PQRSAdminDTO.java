@@ -4,5 +4,5 @@ import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 
 import java.time.LocalDateTime;
 
-public record PQRSAdminDTO(int codigo, String tipo, LocalDateTime fecha, EstadoPqrs estadoPqrs) {
+public record PQRSAdminDTO(int codigo, String detalle, LocalDateTime fecha, EstadoPqrs estadoPqrs) {
 }

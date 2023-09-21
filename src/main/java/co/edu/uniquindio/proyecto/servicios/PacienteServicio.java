@@ -1,30 +1,37 @@
 package co.edu.uniquindio.proyecto.servicios;
 
+import co.edu.uniquindio.proyecto.dto.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
 public interface PacienteServicio {
 
-    void registrarse();
+    String registrarse(RegistroPacienteDTO pacienteDTO) throws Exception;
 
-    void editarPerfil();
+    ActualizarPacienteDTO cargarDatosPaciente(int codigoPaciente);
 
-    void eliminarCuenta();
+    String editarPerfil(int codigo, ActualizarPacienteDTO pacienteDTO) throws Exception;
 
-    void enviarLinkRecuperacion();
+    String eliminarCuenta(int id) throws Exception;
 
-    void cambiarPassword();
+    String enviarLinkRecuperacion(String email) throws Exception;
 
-    void agendarCita();
+    String cambiarPassword(int codigoUsuario, String nuevaPassword) throws Exception;
 
-    void crearPqrs();
+    List<MedicoCitaDTO> filtrarMedicoCita(int especialidad, LocalDate fecha) throws Exception;
 
-    void listarPqrsPaciente();
+    String agendarCita(CitaDTO citaDTO) throws Exception;
 
-    void responderPqrs();
+    String crearPqrs(PQRSPacienteDTO pqrsPacienteDTO);
 
-    void listarCitasPaciente();
+    List<ItemPqrsPacienteDTO> listarPqrsPaciente(int idPaciente) throws Exception;
 
-    void filtrarCitasPorFecha();
+    String responderPqrs(RespuestaPacientePqrsDTO respuestaPqrsDTO);
 
-    void filtrarCitasPorMedico();
+    List<CitasPacienteDTO> listarCitasPaciente(int idPaciente) throws Exception;
 
-    void verDetalleCita();
+    List<CitasPacienteDTO> buscarCita(int nombreMedico, LocalDate fecha) throws Exception;
+
+    List<TratamientoDTO> verTratamiento(int codigoConsulta);
 }

@@ -1,4 +1,7 @@
 package co.edu.uniquindio.proyecto.dto;
 
-public record CitaMedicoDTO (){
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+public record CitaMedicoDTO (int codigoCita, String nombrePaciente, LocalDate fecha, LocalTime hora, String motivo){
 }

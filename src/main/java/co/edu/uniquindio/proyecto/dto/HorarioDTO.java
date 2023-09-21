@@ -1,6 +1,9 @@
 package co.edu.uniquindio.proyecto.dto;
 
-public record HorarioDTO ( String dia,
-        String horaInicio,
-        String horaFin){
+import co.edu.uniquindio.proyecto.modelo.enums.Dia;
+
+import java.time.LocalTime;
+
+public record HorarioDTO (Dia dia,
+                          LocalTime horaInicio, LocalTime horaFin){
 }

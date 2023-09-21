@@ -23,6 +23,7 @@ public class Persona extends Cuenta implements Serializable{
     private String telefono;
 
     @Column(nullable = false)
+    @Lob
     private String foto;
 
     @Column(nullable = false)

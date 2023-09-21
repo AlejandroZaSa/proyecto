@@ -1,6 +1,6 @@
 package co.edu.uniquindio.proyecto.dto;
 
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoCita;
+import java.time.LocalDate;
 
-public record CitasAdminDTO (int codigo, EstadoCita estadoCita) {
+public record CitasAdminDTO (String cedulaPaciente, String nombrePaciente, LocalDate fecha, String nombreMedico) {
 }

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.modelo.entidades;
 
+import co.edu.uniquindio.proyecto.modelo.enums.Dia;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,8 +27,8 @@ public class Horario implements Serializable{
     private LocalTime horaFin;
 
     //dia puede ser enum
-    @Column(nullable = false, length = 9)
-    private String dia;
+    @Column(nullable = false)
+    private Dia dia;
 
     @JoinColumn(nullable = false)
     @ManyToOne

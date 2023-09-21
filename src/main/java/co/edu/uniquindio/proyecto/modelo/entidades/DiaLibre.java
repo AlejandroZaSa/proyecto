@@ -21,7 +21,6 @@ public class DiaLibre implements Serializable {
     @Column(nullable = false)
     private LocalDate fecha;
 
-    //duda si puede ser otra enumeracion
     @Column(nullable = false)
     private boolean estado;
 
