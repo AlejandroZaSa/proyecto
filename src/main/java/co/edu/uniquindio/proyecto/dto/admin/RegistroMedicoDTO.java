@@ -1,24 +1,47 @@
 package co.edu.uniquindio.proyecto.dto.admin;
 
+import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
+import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
+
 import java.util.List;
 
 public record RegistroMedicoDTO(
 
-    String cedula,
+        @NotNull
+        @Length(max = 10)
+        String cedula,
 
-    String nombre,
+        @NotNull
+        @Length(max = 30)
+        String nombre,
 
-    String foto,
+        @NotNull
+        String foto,
 
-    int ciudad,
+        @NotNull
+        @Min(0) @Max(3)
+        int ciudad,
 
-    String telefono,
+        @NotNull
+        @Length(max = 10)
+        String telefono,
 
-    String email,
+        @NotNull @Email @Length(max = 50)
+        String email,
 
-    String password,
+        @NotNull
+        @Length(max = 20)
+        String password,
 
-    int especialidad,
+        @NotNull
+        @Min(0)
+        @Max(8)
+        int especialidad,
 
-    List<HorarioDTO> horarioDTO){
+        List<HorarioDTO> horarioDTO) {
 }

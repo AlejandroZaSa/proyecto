@@ -3,18 +3,6 @@ package co.edu.uniquindio.proyecto.modelo.enums;
 public enum Especialidad {
 
     CARDIOLOGIA,
-    DERMATOLOGIA,
-    ENDOCRINOLOGIA,
-    GASTROENTEROLOGIA,
-    GERIATRIA,
-    GINECOLOGIA,
-    HEMATOLOGIA,
-    INFECTOLOGIA,
-    MEDICINA_DE_EMERGENCIA,
-    MEDICINA_DEPORTIVA,
-    MEDICINA_INTERNA,
-    NEFROLOGIA,
-    NEUMOLOGIA,
     NEUROLOGIA,
     OFTALMOLOGIA,
     ONCOLOGIA,
@@ -22,8 +10,5 @@ public enum Especialidad {
     OTORRINOLARINGOLOGIA,
     PEDIATRIA,
     PSIQUIATRIA,
-    RADIOLOGIA,
-    REUMATOLOGIA,
-    TRAUMATOLOGIA,
     UROLOGIA;
 }
