@@ -1,6 +1,7 @@
 package co.edu.uniquindio.proyecto.servicios.implementacion;
 
 import co.edu.uniquindio.proyecto.dto.admin.*;
+import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.modelo.entidades.Medico;
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
 import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
@@ -73,7 +74,7 @@ public class AdministradorServicioImpl implements AdministradorServicio{
     }
 
     @Override
-    public List<ItemPQRSAdminDTO> listarPqrs() throws Exception {
+    public List<ItemPqrsDTO> listarPqrs() throws Exception {
         return null;
     }
 

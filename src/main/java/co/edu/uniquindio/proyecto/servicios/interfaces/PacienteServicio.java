@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.interfaces;
 
+import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.dto.paciente.*;
 
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public interface PacienteServicio {
 
     int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO);
 
-    List<ItemPqrsPacienteDTO> listarPqrsPaciente(int idPaciente) throws Exception;
+    List<ItemPqrsDTO> listarPqrsPaciente(int idPaciente) throws Exception;
 
     int responderPqrs(RespuestaPacientePqrsDTO respuestaPqrsDTO) throws Exception;
 

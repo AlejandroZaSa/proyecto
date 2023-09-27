@@ -35,5 +35,6 @@ public record ActualizarMedicoDTO(@NotNull
                                   @Max(8)
                                   int especialidad,
 
+                                  @NotNull
                                   List<HorarioDTO> horarioDTO) {
 }

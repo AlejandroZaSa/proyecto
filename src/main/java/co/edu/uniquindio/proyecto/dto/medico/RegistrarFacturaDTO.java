@@ -1,4 +1,11 @@
 package co.edu.uniquindio.proyecto.dto.medico;
 
-public record RegistrarFacturaDTO(int idConsulta, String concepto) {
+import jakarta.validation.constraints.NotNull;
+
+public record RegistrarFacturaDTO(
+
+        @NotNull
+        int idConsulta,
+        @NotNull
+        String concepto) {
 }

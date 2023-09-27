@@ -1,6 +1,7 @@
 package co.edu.uniquindio.proyecto.servicios.interfaces;
 
 import co.edu.uniquindio.proyecto.dto.admin.*;
+import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface AdministradorServicio {
 
     List<ItemMedicoDTO> listarMedicos() throws Exception;
 
-    List<ItemPQRSAdminDTO> listarPqrs() throws Exception;
+    List<ItemPqrsDTO> listarPqrs() throws Exception;
 
     void cambiarEstadoPqrs(EstadoPqrsDTO estadoPqrsDTO) throws Exception;
 
