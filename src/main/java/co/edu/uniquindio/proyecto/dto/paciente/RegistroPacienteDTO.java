@@ -22,6 +22,7 @@ public record RegistroPacienteDTO(
         @Length(max = 10)
         String telefono,
         @NotNull
+        @Email
         @Length(max = 50)
         String email,
         @NotNull

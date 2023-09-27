@@ -21,6 +21,7 @@ public record ActualizarPacienteDTO(
         String telefono,
         @NotNull
         @Length(max = 50)
+                @Email
         String email,
         @NotNull
         String foto,
