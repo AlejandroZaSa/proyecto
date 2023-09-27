@@ -1,6 +1,7 @@
 package co.edu.uniquindio.proyecto.servicios.interfaces;
 
 import co.edu.uniquindio.proyecto.dto.clinica.EmailDTO;
+import co.edu.uniquindio.proyecto.dto.admin.RegistroTratamientoDTO;
 import co.edu.uniquindio.proyecto.dto.medico.*;
 
 import java.util.List;
@@ -10,14 +11,14 @@ public interface MedicoServicio {
 
     int atenderCita(AtencionMedicoDTO atencionMedicoDTO) throws Exception;
 
-    //esta es la dudosa
     List<ItemConsultaMedicoPacienteDTO> listarCitaPaciente(int codigoPaciente) throws Exception;
 
     int agendarDiaLibre(DiaLibreDTO diaLibreDTO) throws Exception;
 
+    void registrarTratamiento(List<RegistroTratamientoDTO> tratamientoDTOList) throws Exception ;
     List<ItemConsultaMedicoPacienteDTO> listarCitasRealizadasMedico(int codigoMedico) throws Exception;
+    int generarFactura(RegistrarFacturaDTO facturaDTO) throws Exception;
 
-    int generarFactura(FacturaDTO facturaDTO) throws Exception;
-
-    EmailDTO enviarCorreoFactura(FacturaDTO facturaDTO);
+    DetalleFacturaDTO mostrarDetalleFactura(int codigoConsulta) throws Exception;
+    EmailDTO enviarCorreoFactura(RegistrarFacturaDTO facturaDTO);
 }

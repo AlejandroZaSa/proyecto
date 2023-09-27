@@ -78,8 +78,8 @@ public class AdministradorServicioImpl implements AdministradorServicio{
     }
 
     @Override
-    public int cambiarEstadoPqrs(EstadoPqrsDTO estadoPqrsDTO) throws Exception {
-        return 0;
+    public void cambiarEstadoPqrs(EstadoPqrsDTO estadoPqrsDTO) throws Exception {
+
     }
 
     @Override

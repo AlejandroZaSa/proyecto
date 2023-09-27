@@ -1,8 +1,8 @@
 package co.edu.uniquindio.proyecto.servicios.interfaces;
 
+import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.EpsDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.MensajeDTO;
-import co.edu.uniquindio.proyecto.dto.clinica.TratamientoDTO;
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 import co.edu.uniquindio.proyecto.modelo.enums.Medicamento;
@@ -12,15 +12,15 @@ import java.util.List;
 
 public interface ClinicaServicio {
 
-    List<EstadoPqrs> cargarListaEstadosPqrs() throws Exception;
+    List<EstadoPqrs> cargarListaEstadosPqrs();
 
-    List<TipoSangre> cargarTiposSangre() throws Exception;
+    List<TipoSangre> cargarTiposSangre();
 
-    List<EpsDTO> cargarEps() throws Exception;
+    List<EpsDTO> cargarEps();
 
-    List<Medicamento> cargarMedicamentos() throws Exception;
+    List<Medicamento> cargarMedicamentos();
 
-    List<Ciudad> cargarCiudades() throws Exception;
+    List<Ciudad> cargarCiudades();
 
     List<MensajeDTO> mostrarHistorialMensajesPqrs(int codigoPqrs) throws Exception;
 
@@ -28,6 +28,6 @@ public interface ClinicaServicio {
 
     void cambiarPassword(int codigoUsuario, String nuevaPassword) throws Exception;
 
-    List<TratamientoDTO> verTratamiento(int codigoConsulta);
+    List<ItemTratamientoDTO> verTratamiento(int codigoConsulta);
 
 }

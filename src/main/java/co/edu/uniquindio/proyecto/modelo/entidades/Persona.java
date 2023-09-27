@@ -29,7 +29,6 @@ public class Persona extends Cuenta implements Serializable{
     @Column(nullable = false)
     private Ciudad ciudad;
 
-    //estado de la persona podría ser enum activo o inactivo
     @Column(nullable = false)
     private boolean estado;
 

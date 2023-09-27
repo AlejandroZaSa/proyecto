@@ -18,7 +18,7 @@ public interface AdministradorServicio {
 
     List<ItemPQRSAdminDTO> listarPqrs() throws Exception;
 
-    int cambiarEstadoPqrs(EstadoPqrsDTO estadoPqrsDTO) throws Exception;
+    void cambiarEstadoPqrs(EstadoPqrsDTO estadoPqrsDTO) throws Exception;
 
     DetalleConsultaPqrsDTO mostrarDetalleConsultaPqrs(int codigoPqrs) throws Exception;
 

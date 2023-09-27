@@ -29,5 +29,5 @@ public interface PacienteServicio {
 
     List<ItemCitaPqrsPacienteDTO> listarCitasPqrsPaciente(int idPaciente) throws Exception;
 
-    List<ItemConsultaPacienteDTO> buscarConsulta(int nombreMedico, LocalDate fecha) throws Exception;
+    List<ItemConsultaPacienteDTO> buscarConsulta(String nombreMedico, LocalDate fecha, int idPaciente) throws Exception;
 }

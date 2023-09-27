@@ -1,11 +1,6 @@
 package co.edu.uniquindio.proyecto.dto.admin;
 
-import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
-import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
@@ -43,5 +38,6 @@ public record RegistroMedicoDTO(
         @Max(8)
         int especialidad,
 
+        @NotEmpty
         List<HorarioDTO> horarioDTO) {
 }
