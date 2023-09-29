@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.servicios.interfaces;
 
 import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.dto.paciente.*;
+import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,7 +17,7 @@ public interface PacienteServicio {
 
     void eliminarCuenta(int id) throws Exception;
 
-    List<ItemMedicoCitaDTO> filtrarMedicoCita(int especialidad, LocalDate fecha) throws Exception;
+    List<ItemMedicoCitaDTO> filtrarMedicoCita(Especialidad especialidad, LocalDate fecha) throws Exception;
 
     int agendarCita(CitaDTO citaDTO) throws Exception;
 

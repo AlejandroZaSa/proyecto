@@ -5,16 +5,22 @@ import co.edu.uniquindio.proyecto.dto.admin.HorarioDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.dto.paciente.*;
 import co.edu.uniquindio.proyecto.modelo.entidades.*;
+import co.edu.uniquindio.proyecto.modelo.enums.Dia;
+import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.PacienteServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -28,15 +34,18 @@ public class PacienteServicioImpl implements PacienteServicio {
     private final RespuestaPacienteRepository respuestaPacienteRepository;
     private final RespuestaAdminRepository respuestaAdminRepository;
     private final ConsultaRepository consultaRepository;
+    private final MedicoRepository medicoRepository;
+    private final DiaLibreRepository diaLibreRepository;
+    private final HorarioRepository horarioRepository;
 
     @Override
     public int registrarse(RegistroPacienteDTO pacienteDTO) throws Exception {
 
-        if(estaRepetidoCorreo(pacienteDTO.email())){
-            throw new Exception ("El correo ya está en uso");
+        if (estaRepetidoCorreo(pacienteDTO.email())) {
+            throw new Exception("El correo ya está en uso");
         }
-        if(estaRepetidaCedula(pacienteDTO.cedula())){
-            throw new Exception ("La cedula ya se encuentra registrada");
+        if (estaRepetidaCedula(pacienteDTO.cedula())) {
+            throw new Exception("La cedula ya se encuentra registrada");
         }
 
         Paciente pacienteNuevo = new Paciente();
@@ -72,12 +81,12 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public ActualizarPacienteDTO cargarDatosPaciente(int codigoPaciente) throws Exception{
+    public ActualizarPacienteDTO cargarDatosPaciente(int codigoPaciente) throws Exception {
 
         Optional<Paciente> opcional = pacienteRepository.findById(codigoPaciente);
 
-        if(opcional.isEmpty()){
-            throw new Exception("No existe un paciente con el codigo: "+ codigoPaciente);
+        if (opcional.isEmpty()) {
+            throw new Exception("No existe un paciente con el codigo: " + codigoPaciente);
         }
 
         Paciente buscado = opcional.get();
@@ -93,7 +102,7 @@ public class PacienteServicioImpl implements PacienteServicio {
                 buscado.getEps().getId(),
                 buscado.getTipoSangre(),
                 buscado.getAlergias()
-                );
+        );
     }
 
     @Override
@@ -101,17 +110,17 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         Optional<Paciente> opcional = pacienteRepository.findById(codigoPaciente);
 
-        if(opcional.isEmpty()){
-            throw new Exception("No existe un paciente con el codigo: "+ codigoPaciente);
+        if (opcional.isEmpty()) {
+            throw new Exception("No existe un paciente con el codigo: " + codigoPaciente);
         }
 
         Paciente buscado = opcional.get();
 
-        if(estaRepetidoCorreo(buscado.getEmail())){
-            throw new Exception ("El correo ya está en uso");
+        if (estaRepetidoCorreo(buscado.getEmail())) {
+            throw new Exception("El correo ya está en uso");
         }
-        if(estaRepetidaCedula(buscado.getCedula())){
-            throw new Exception ("La cedula ya se encuentra registrada");
+        if (estaRepetidaCedula(buscado.getCedula())) {
+            throw new Exception("La cedula ya se encuentra registrada");
         }
 
         buscado.setTelefono(pacienteDTO.telefono());
@@ -136,8 +145,8 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         Optional<Paciente> opcional = pacienteRepository.findById(idPaciente);
 
-        if(opcional.isEmpty()){
-            throw new Exception("No existe un paciente con el codigo: "+ idPaciente);
+        if (opcional.isEmpty()) {
+            throw new Exception("No existe un paciente con el codigo: " + idPaciente);
         }
 
         Paciente buscado = opcional.get();
@@ -148,10 +157,66 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public List<ItemMedicoCitaDTO> filtrarMedicoCita(int especialidad, LocalDate fecha) throws Exception {
+    public List<ItemMedicoCitaDTO> filtrarMedicoCita(Especialidad especialidad, LocalDate fecha) throws Exception {
+        List<Medico> medicosEspecializados = medicoRepository.obtenerMedicoEspecialidad(especialidad);
 
+        //____________________________Vemos qué día se quiere la cita____________________________
+        //Obtenemos el día de la semana
+        DayOfWeek diaDeLaSemana = fecha.getDayOfWeek();
+        //Obtenemos el nombre en español
+        String nombreDia = diaDeLaSemana.getDisplayName(
+                java.time.format.TextStyle.FULL, // Estilo de texto completo (por ejemplo, "lunes" en español)
+                Locale.getDefault() // Localización predeterminada para el idioma
+        );
+        //Obtenemos el enumerable
+        Dia dia = Dia.valueOf(nombreDia.toUpperCase());
+        //________________________________________________________________________________________
 
-        return null;
+        //____________________________Filtrar los que no tienen libre ese día_____________________
+        List<Medico> medicosDisponibles = new ArrayList<>();
+        //Validamos que el médico no tenga día libre ese día
+        for (Medico medico : medicosEspecializados) {
+            if (diaLibreRepository.obtenerDiaLibreFecha(medico.getId(), fecha) == null) {
+                //Si no tiene día libre en esa fecha lo agregamos a los posibles disponibles
+                medicosDisponibles.add(medico);
+            }
+        }
+        //________________________________________________________________________________________
+
+        //________Obtenemos todos los horarios posibles en los que se pueda agendar una cita______
+        List<ItemMedicoCitaDTO> itemMedicoCitaDTOS = new ArrayList<>();
+
+        for (Medico medico : medicosDisponibles) {
+            Horario horarioMedico = horarioRepository.obtenerHorarioFecha(medico.getId(), dia);
+            List<Cita> citasPendientes = citaRepository.obtenerCitasFecha(medico.getId(), fecha);
+
+            //Empezamos con la primera hora de trabajo del medico
+            LocalTime horaInicioCita = horarioMedico.getHoraInicio();
+            LocalTime finJornada = horarioMedico.getHoraFin();
+
+            /*
+            * Mientras que el posible inicio de la cita sea diferente al fin de la jornada
+            * Se evalua como posible inicio de una nueva cita
+            * */
+            while (horaInicioCita != finJornada){
+
+                boolean sePuedeAgendar = true;
+                //Validamos que ninguna cita cumpla con esa hora
+                for (Cita cita : citasPendientes) {
+                    if(horaInicioCita == cita.getHora()){
+                        sePuedeAgendar = false;
+                        break;
+                    }
+                }
+                if(sePuedeAgendar){
+                    itemMedicoCitaDTOS.add(new ItemMedicoCitaDTO(medico.getId(), medico.getNombreCompleto(), horaInicioCita));
+                }
+                //Sumamos 30 minutos que es la duración de una cita
+                horaInicioCita = horaInicioCita.plusMinutes(30);
+            }
+        }
+        //________________________________________________________________________________________
+        return itemMedicoCitaDTOS;
     }
 
     @Override
@@ -160,11 +225,11 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO) throws Exception{
+    public int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO) throws Exception {
 
         Optional<Cita> opcional = citaRepository.findById(pqrsPacienteDTO.codigoCita());
 
-        if(opcional.isEmpty()){
+        if (opcional.isEmpty()) {
             throw new Exception("No existe esa cita");
         }
 
@@ -192,20 +257,20 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         Optional<Pqrs> opcionalPqrs = pqrsRepository.findById(respuestaPqrsDTO.codigoPqrs());
 
-        if(opcionalPqrs.isEmpty()){
+        if (opcionalPqrs.isEmpty()) {
             throw new Exception("No existe esa pqrs");
         }
         Optional<RespuestaAdmin> respuestaAdmin = respuestaAdminRepository.findById(respuestaPqrsDTO.respuestaAdmin());
         RespuestaAdmin buscadoRespuesta = respuestaAdmin.get();
 
-        if(respuestaAdmin.isEmpty()){
+        if (respuestaAdmin.isEmpty()) {
             throw new Exception("No existe una respuesta con ese codigo");
         }
 
         Optional<Paciente> paciente = pacienteRepository.findById(respuestaPqrsDTO.codigoPaciente());
         Paciente buscadoPaciente = paciente.get();
 
-        if(paciente.isEmpty()){
+        if (paciente.isEmpty()) {
             throw new Exception("No existe el paciente");
         }
 
@@ -219,7 +284,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         respuestaPacienteNuevo.setMensaje(respuestaPqrsDTO.mensaje());
         respuestaPacienteNuevo.setPaciente(buscadoPaciente);
 
-        RespuestaPaciente respuestaPacienteRegistrada =respuestaPacienteRepository.save(respuestaPacienteNuevo);
+        RespuestaPaciente respuestaPacienteRegistrada = respuestaPacienteRepository.save(respuestaPacienteNuevo);
         return respuestaPacienteRegistrada.getId();
     }
 
@@ -238,8 +303,8 @@ public class PacienteServicioImpl implements PacienteServicio {
         List<Cita> citas = citaRepository.findAllByPaciente_Id(idPaciente);
         List<ItemCitaPqrsPacienteDTO> respuesta = new ArrayList<>();
 
-        for(Cita cita: citas){
-            respuesta.add(new ItemCitaPqrsPacienteDTO(cita.getId(),cita.getFecha()));
+        for (Cita cita : citas) {
+            respuesta.add(new ItemCitaPqrsPacienteDTO(cita.getId(), cita.getFecha()));
         }
 
         return respuesta;

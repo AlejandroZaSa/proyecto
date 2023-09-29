@@ -91,6 +91,13 @@ public class MedicoServicioImpl implements MedicoServicio {
             throw new Exception("El medico no existe");
         }
 
+        //Validamos que no tenga citas en la fecha deseada
+        Cita existeCita = citaRepository.buscarCitaEnFecha(diaLibreDTO.codigoMedico(), diaLibreDTO.fecha());
+        //Si existe una cita, lanzamos una excepción
+        if(existeCita != null){
+            throw new Exception("Ese día se tiene una cita pendiente, no se puede pedir el día " + diaLibreDTO.fecha() + " libre.");
+        }
+
         Medico buscado = medico.get();
 
         DiaLibre diaLibreNuevo = new DiaLibre();

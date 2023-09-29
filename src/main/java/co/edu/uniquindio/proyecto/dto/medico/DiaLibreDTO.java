@@ -9,7 +9,5 @@ public record DiaLibreDTO(
         int codigoMedico,
 
         @NotNull
-        LocalDate fecha,
-        @NotNull
-        boolean estado) {
+        LocalDate fecha) {
 }
