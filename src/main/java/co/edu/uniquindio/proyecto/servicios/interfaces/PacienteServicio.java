@@ -10,7 +10,7 @@ public interface PacienteServicio {
 
     int registrarse(RegistroPacienteDTO pacienteDTO) throws Exception;
 
-    ActualizarPacienteDTO cargarDatosPaciente(int codigoPaciente);
+    ActualizarPacienteDTO cargarDatosPaciente(int codigoPaciente) throws Exception;
 
     int editarPerfil(int codigo, ActualizarPacienteDTO pacienteDTO) throws Exception;
 
@@ -20,7 +20,7 @@ public interface PacienteServicio {
 
     int agendarCita(CitaDTO citaDTO) throws Exception;
 
-    int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO);
+    int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO) throws Exception;
 
     List<ItemPqrsDTO> listarPqrsPaciente(int idPaciente) throws Exception;
 

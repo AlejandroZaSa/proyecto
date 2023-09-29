@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record PQRSPacienteDTO (
         @NotNull
-        int codigoPaciente,
-        @NotNull
         int codigoCita,
 
         @NotNull

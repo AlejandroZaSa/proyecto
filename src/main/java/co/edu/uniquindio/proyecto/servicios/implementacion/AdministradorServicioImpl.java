@@ -4,19 +4,15 @@ import co.edu.uniquindio.proyecto.dto.admin.*;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
 import co.edu.uniquindio.proyecto.modelo.entidades.*;
-import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
-import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.AdministradorServicio;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +57,7 @@ public class AdministradorServicioImpl implements AdministradorServicio{
             horarioNuevo.setDia(horario.dia());
             horarioNuevo.setHoraInicio(horario.horaInicio());
             horarioNuevo.setHoraFin(horario.horaFin());
-            Horario horarioRegistrado = horarioRepository.save(horarioNuevo);
+            horarioRepository.save(horarioNuevo);
         }
 
         return medicoRegistrado.getId();
@@ -144,7 +140,7 @@ public class AdministradorServicioImpl implements AdministradorServicio{
             horarioNuevo.setDia(horario.dia());
             horarioNuevo.setHoraInicio(horario.horaInicio());
             horarioNuevo.setHoraFin(horario.horaFin());
-            Horario horarioRegistrado = horarioRepository.save(horarioNuevo);
+            horarioRepository.save(horarioNuevo);
         }
 
         return buscado.getId();
@@ -231,6 +227,7 @@ public class AdministradorServicioImpl implements AdministradorServicio{
 
         int idAtencion = buscado.getCita().getConsulta().getId();
 
+        //ClinicaServicioImpl clinicaServicio = new ClinicaServicioImpl();
         List<ItemTratamientoDTO> respuesta = null;
 
 
