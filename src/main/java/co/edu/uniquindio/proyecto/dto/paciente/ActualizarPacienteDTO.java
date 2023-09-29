@@ -2,6 +2,7 @@ package co.edu.uniquindio.proyecto.dto.paciente;
 
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
 import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -29,12 +30,10 @@ public record ActualizarPacienteDTO(
         LocalDate fechaNacimiento,
 
         @NotNull
-        @Min(0) @Max(3)
         Ciudad ciudad,
         @NotNull
         int eps,
         @NotNull
-        @Min(0) @Max(7)
         TipoSangre tipoSangre,
         @NotNull
         String alergias) {

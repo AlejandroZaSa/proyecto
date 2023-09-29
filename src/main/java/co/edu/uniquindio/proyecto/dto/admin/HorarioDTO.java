@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 public record HorarioDTO (
         @NotNull
-        int dia,
+        Dia dia,
                           @NotNull
                           LocalTime horaInicio,
         @NotNull

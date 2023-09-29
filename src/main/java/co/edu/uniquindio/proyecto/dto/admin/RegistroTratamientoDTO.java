@@ -12,6 +12,5 @@ public record RegistroTratamientoDTO(int dosis,
                                      @NotNull
                                      String observaciones,
 
-                                     @Min(0) @Max(31)
                                      Medicamento nombreMedicamento) {
 }

@@ -1,5 +1,7 @@
 package co.edu.uniquindio.proyecto.dto.admin;
 
+import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
+import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -20,8 +22,7 @@ public record ActualizarMedicoDTO(@NotNull
                                   String foto,
 
                                   @NotNull
-                                  @Min(0) @Max(3)
-                                  int ciudad,
+                                  Ciudad ciudad,
 
                                   @NotNull
                                   @Length(max = 10)
@@ -31,9 +32,10 @@ public record ActualizarMedicoDTO(@NotNull
                                   String email,
 
                                   @NotNull
-                                  @Min(0)
-                                  @Max(8)
-                                  int especialidad,
+                                  Especialidad especialidad,
+
+                                  @NotNull
+                                  float precioConsulta,
 
                                   @NotNull
                                   List<HorarioDTO> horarioDTO) {

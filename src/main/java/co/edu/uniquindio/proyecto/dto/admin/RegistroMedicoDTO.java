@@ -1,5 +1,7 @@
 package co.edu.uniquindio.proyecto.dto.admin;
 
+import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
+import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -19,8 +21,7 @@ public record RegistroMedicoDTO(
         String foto,
 
         @NotNull
-        @Min(0) @Max(3)
-        int ciudad,
+        Ciudad ciudad,
 
         @NotNull
         @Length(max = 10)
@@ -30,13 +31,13 @@ public record RegistroMedicoDTO(
         String email,
 
         @NotNull
-        @Length(max = 20)
+        float precioConsulta,
+
+        @NotNull
         String password,
 
         @NotNull
-        @Min(0)
-        @Max(8)
-        int especialidad,
+        Especialidad especialidad,
 
         @NotEmpty
         List<HorarioDTO> horarioDTO) {

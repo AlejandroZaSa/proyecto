@@ -1,17 +1,19 @@
 package co.edu.uniquindio.proyecto.dto.admin;
 
-import jakarta.validation.constraints.NotNull;
+import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record DetalleConsultaPqrsDTO(
 
-        LocalDate fecha,
+        LocalDateTime fecha,
 
         String notasMedico,
 
         String diagnostico,
 
-        List<RegistroTratamientoDTO> tratamientoDTOList) {
+        List<ItemTratamientoDTO> tratamientoDTOList,
+
+        String sintomas) {
 }
