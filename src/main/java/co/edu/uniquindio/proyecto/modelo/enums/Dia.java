@@ -7,7 +7,6 @@ public enum Dia {
     MIERCOLES,
     JUEVES,
     VIERNES,
-
     SABADO,
     DOMINGO;
 

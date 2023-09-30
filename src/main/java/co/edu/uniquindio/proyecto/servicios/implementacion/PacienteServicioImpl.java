@@ -184,7 +184,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         //________________________________________________________________________________________
 
         //________Obtenemos todos los horarios posibles en los que se pueda agendar una cita______
-        List<ItemMedicoCitaDTO> itemMedicoCitaDTOS = new ArrayList<>();
+        List<ItemMedicoCitaDTO> listaItemMedicoCitaDTOS = new ArrayList<>();
 
         for (Medico medico : medicosDisponibles) {
             Horario horarioMedico = horarioRepository.obtenerHorarioFecha(medico.getId(), dia);
@@ -209,19 +209,41 @@ public class PacienteServicioImpl implements PacienteServicio {
                     }
                 }
                 if(sePuedeAgendar){
-                    itemMedicoCitaDTOS.add(new ItemMedicoCitaDTO(medico.getId(), medico.getNombreCompleto(), horaInicioCita));
+                    listaItemMedicoCitaDTOS.add(new ItemMedicoCitaDTO(medico.getId(), medico.getNombreCompleto(), horaInicioCita));
                 }
                 //Sumamos 30 minutos que es la duración de una cita
                 horaInicioCita = horaInicioCita.plusMinutes(30);
             }
         }
         //________________________________________________________________________________________
-        return itemMedicoCitaDTOS;
+        return listaItemMedicoCitaDTOS;
     }
 
     @Override
     public int agendarCita(CitaDTO citaDTO) throws Exception {
-        return 0;
+
+        Cita citaNueva = new Cita();
+
+        Optional<Medico> medico = medicoRepository.findById(citaDTO.idMedico());
+        Optional<Paciente> paciente = pacienteRepository.findById(citaDTO.idPaciente());
+
+        if(medico.isEmpty()){
+            throw new Exception("No existe ese medico");
+        }
+
+        if(paciente.isEmpty()){
+            throw new Exception("No existe ese paciente");
+        }
+
+        citaNueva.setMotivo(citaDTO.motivo());
+        citaNueva.setFecha(citaDTO.fecha());
+        citaNueva.setHora(citaDTO.hora());
+        citaNueva.setMedico(medico.get());
+        citaNueva.setPaciente(paciente.get());
+
+        Cita citaRegistrada = citaRepository.save(citaNueva);
+
+        return citaRegistrada.getId();
     }
 
     @Override
@@ -249,7 +271,16 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public List<ItemPqrsDTO> listarPqrsPaciente(int idPaciente) throws Exception {
 
-        return null;
+        List<Pqrs> pqrsPaciente = pqrsRepository.findAllByPaciente_Id(idPaciente);
+
+        List<ItemPqrsDTO> listaItemPqrsDTO = new ArrayList<>();
+
+        for(Pqrs pqrs : pqrsPaciente ){
+            listaItemPqrsDTO.add(new ItemPqrsDTO(pqrs.getNumeroRadicado(), pqrs.getDetalle(),
+                    pqrs.getFechaCreacion(), pqrs.getEstadoPqrs()));
+        }
+
+        return listaItemPqrsDTO;
     }
 
     @Override
@@ -274,9 +305,7 @@ public class PacienteServicioImpl implements PacienteServicio {
             throw new Exception("No existe el paciente");
         }
 
-
         RespuestaPaciente respuestaPacienteNuevo = new RespuestaPaciente();
-
 
         respuestaPacienteNuevo.setRespuestaAdmin(buscadoRespuesta);
         respuestaPacienteNuevo.setFecha(LocalDateTime.now());
@@ -291,8 +320,15 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public List<ItemCitaPacienteDTO> listarCitasPaciente(int codigoPaciente) throws Exception {
 
-        List<Consulta> consulta = null;
+        List<Cita> citasPaciente = citaRepository.findAllByPaciente_Id(codigoPaciente);
         List<ItemCitaPacienteDTO> respuesta = new ArrayList<>();
+
+        for(Cita cita: citasPaciente ){
+            respuesta.add(new ItemCitaPacienteDTO(cita.getMotivo(),
+                    cita.getFechaCreacion(), cita.getFecha(),
+                    cita.getHora(), cita.getEstadoCita(),
+                    cita.getMedico().getNombreCompleto()));
+        }
 
         return respuesta;
     }
@@ -312,7 +348,6 @@ public class PacienteServicioImpl implements PacienteServicio {
 
     @Override
     public List<ItemConsultaPacienteDTO> buscarConsulta(String nombreMedico, LocalDate fecha, int idPaciente) throws Exception {
-
 
         return null;
     }

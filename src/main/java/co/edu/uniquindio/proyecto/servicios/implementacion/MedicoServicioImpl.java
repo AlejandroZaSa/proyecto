@@ -25,6 +25,7 @@ public class MedicoServicioImpl implements MedicoServicio {
     private final ConsultaRepository consultaRepository;
     private final TratamientoRepository tratamientoRepository;
     private final FacturaRepository facturaRepository;
+    private final PacienteRepository pacienteRepository;
 
     @Override
     public List<ItemCitaMedicoDTO> listarCitasPendientes(int codigoMedico) throws Exception {
@@ -79,7 +80,23 @@ public class MedicoServicioImpl implements MedicoServicio {
 
     @Override
     public List<ItemConsultaMedicoPacienteDTO> listarCitaPaciente(int codigoPaciente) throws Exception {
-        return null;
+
+        List<Consulta> consultasPaciente = pacienteRepository.buscarConsultasPaciente(codigoPaciente);
+
+        List<ItemConsultaMedicoPacienteDTO> itemConsultaMedicoPacienteDTOList = new ArrayList<>();
+
+        for(Consulta consulta : consultasPaciente){
+            itemConsultaMedicoPacienteDTOList.add(new ItemConsultaMedicoPacienteDTO(
+                    consulta.getId(),
+                    consulta.getCita().getPaciente().getNombreCompleto(),
+                    consulta.getFecha(),
+                    consulta.getNotasMedico(),
+                    consulta.getDiagnostico(),
+                    consulta.getSintomas()
+            ));
+        }
+
+        return itemConsultaMedicoPacienteDTOList;
     }
 
     @Override
@@ -119,9 +136,22 @@ public class MedicoServicioImpl implements MedicoServicio {
     @Override
     public List<ItemConsultaMedicoPacienteDTO> listarCitasRealizadasMedico(int codigoMedico) throws Exception {
 
+        List<Consulta> consultasMedico = medicoRepository.buscarConsultasMedico(codigoMedico);
 
+        List<ItemConsultaMedicoPacienteDTO> itemConsultaMedicoPacienteDTOList = new ArrayList<>();
 
-        return null;
+        for(Consulta consulta: consultasMedico){
+            itemConsultaMedicoPacienteDTOList.add(new ItemConsultaMedicoPacienteDTO(
+                    consulta.getId(),
+                    consulta.getCita().getPaciente().getNombreCompleto(),
+                    consulta.getFecha(),
+                    consulta.getNotasMedico(),
+                    consulta.getDiagnostico(),
+                    consulta.getSintomas()
+            ));
+        }
+
+        return itemConsultaMedicoPacienteDTOList;
     }
 
     @Override
