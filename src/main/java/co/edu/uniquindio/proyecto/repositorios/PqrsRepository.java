@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface PqrsRepository extends JpaRepository<Pqrs, Integer> {
 
-    List<Pqrs> findAllByPaciente_Id(int idPaciente);
+    List<Pqrs> findAllByCita_Paciente_Id(int idPaciente);
+
+
 }

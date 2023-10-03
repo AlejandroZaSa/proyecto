@@ -66,8 +66,8 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     @Override
     public List<MensajeDTO> mostrarHistorialMensajesPqrs(int codigoPqrs) throws Exception {
 
-        List<RespuestaAdmin> respuestaAdmin = respuestaAdminRepository.findAllByPqrs_id(codigoPqrs);
-        List<RespuestaPaciente> respuestaPaciente = respuestaPacienteRepository.findAllByPqrs_id(codigoPqrs);
+        List<RespuestaAdmin> respuestaAdmin = respuestaAdminRepository.findAllByPqrs_NumeroRadicado(codigoPqrs);
+        List<RespuestaPaciente> respuestaPaciente = respuestaPacienteRepository.findAllByPqrs_NumeroRadicado(codigoPqrs);
 
         List<MensajeDTO> mensajes = new ArrayList<>();
 

@@ -104,6 +104,7 @@ public class MedicoServicioImpl implements MedicoServicio {
 
         Optional<Medico> medico = medicoRepository.findById(diaLibreDTO.codigoMedico());
 
+
         if(medico.isEmpty()){
             throw new Exception("El medico no existe");
         }
@@ -167,7 +168,7 @@ public class MedicoServicioImpl implements MedicoServicio {
         Consulta consultaBuscada = consulta.get();
 
         facturaNuevo.setFecha(LocalDate.now());
-        //facturaNuevo.setValor();
+        facturaNuevo.setValor(5);
         facturaNuevo.setConcepto(facturaDTO.concepto());
         facturaNuevo.setEstado(EstadoFactura.ENVIADA);
         facturaNuevo.setConsulta(consultaBuscada);

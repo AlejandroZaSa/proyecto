@@ -41,10 +41,10 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public int registrarse(RegistroPacienteDTO pacienteDTO) throws Exception {
 
-        if (estaRepetidoCorreo(pacienteDTO.email())) {
+        if (!estaRepetidoCorreo(pacienteDTO.email())) {
             throw new Exception("El correo ya está en uso");
         }
-        if (estaRepetidaCedula(pacienteDTO.cedula())) {
+        if (!estaRepetidaCedula(pacienteDTO.cedula())) {
             throw new Exception("La cedula ya se encuentra registrada");
         }
 
@@ -59,6 +59,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         pacienteNuevo.setFechaNacimiento(pacienteDTO.fechaNacimiento());
         pacienteNuevo.setTipoSangre(pacienteDTO.tipoSangre());
         pacienteNuevo.setCiudad(pacienteDTO.ciudad());
+        pacienteNuevo.setEstado(true);
 
         pacienteNuevo.setContrasenia(pacienteDTO.password());
         pacienteNuevo.setEmail(pacienteDTO.email());
@@ -116,10 +117,10 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         Paciente buscado = opcional.get();
 
-        if (estaRepetidoCorreo(buscado.getEmail())) {
+        if (!estaRepetidoCorreo(pacienteDTO.email()) && (!buscado.getEmail().equals(pacienteDTO.email()))) {
             throw new Exception("El correo ya está en uso");
         }
-        if (estaRepetidaCedula(buscado.getCedula())) {
+        if (!estaRepetidaCedula(pacienteDTO.cedula()) && (!buscado.getCedula().equals(pacienteDTO.cedula()))) {
             throw new Exception("La cedula ya se encuentra registrada");
         }
 
@@ -132,7 +133,6 @@ public class PacienteServicioImpl implements PacienteServicio {
         buscado.setFechaNacimiento(pacienteDTO.fechaNacimiento());
         buscado.setTipoSangre(pacienteDTO.tipoSangre());
         buscado.setCiudad(pacienteDTO.ciudad());
-
         buscado.setEmail(pacienteDTO.email());
 
         pacienteRepository.save(buscado);
@@ -271,7 +271,8 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public List<ItemPqrsDTO> listarPqrsPaciente(int idPaciente) throws Exception {
 
-        List<Pqrs> pqrsPaciente = pqrsRepository.findAllByPaciente_Id(idPaciente);
+        //error
+        List<Pqrs> pqrsPaciente = pqrsRepository.findAllByCita_Paciente_Id(idPaciente);
 
         List<ItemPqrsDTO> listaItemPqrsDTO = new ArrayList<>();
 

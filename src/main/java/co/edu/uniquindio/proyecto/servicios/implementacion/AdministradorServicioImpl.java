@@ -28,10 +28,10 @@ public class AdministradorServicioImpl implements AdministradorServicio{
     @Override
     public int crearMedico(RegistroMedicoDTO medicoDTO) throws Exception {
 
-        if(estaRepetidoCorreo(medicoDTO.email())){
+        if(!estaRepetidoCorreo(medicoDTO.email())){
             throw new Exception ("El correo ya está en uso");
         }
-        if(estaRepetidaCedula(medicoDTO.cedula())){
+        if(!estaRepetidaCedula(medicoDTO.cedula())){
             throw new Exception ("La cedula ya se encuentra registrada");
         }
 
@@ -116,10 +116,10 @@ public class AdministradorServicioImpl implements AdministradorServicio{
 
         Medico buscado = opcional.get();
 
-        if(estaRepetidoCorreo(buscado.getEmail())){
+        if(!estaRepetidoCorreo(medico.email()) && (!buscado.getEmail().equals(medico.email())) ){
             throw new Exception ("El correo ya está en uso");
         }
-        if(estaRepetidaCedula(buscado.getCedula())){
+        if(!estaRepetidaCedula(medico.cedula()) && (!buscado.getCedula().equals(medico.cedula()))){
             throw new Exception ("La cedula ya se encuentra registrada");
         }
 
@@ -134,13 +134,15 @@ public class AdministradorServicioImpl implements AdministradorServicio{
 
         medicoRepository.save(buscado);
 
-        for(HorarioDTO horario: medico.horarioDTO()){
-            Horario horarioNuevo = new Horario();
-            horarioNuevo.setMedico(buscado);
-            horarioNuevo.setDia(horario.dia());
-            horarioNuevo.setHoraInicio(horario.horaInicio());
-            horarioNuevo.setHoraFin(horario.horaFin());
-            horarioRepository.save(horarioNuevo);
+        List<Horario> horarios  = horarioRepository.findAllByMedico_Id(buscado.getId());
+        int posicion = 0;
+        for(Horario horario: horarios){
+            horario.setMedico(buscado);
+            horario.setDia(medico.horarioDTO().get(posicion).dia());
+            horario.setHoraInicio(medico.horarioDTO().get(posicion).horaInicio());
+            horario.setHoraFin(medico.horarioDTO().get(posicion).horaFin());
+            horarioRepository.save(horario);
+            posicion++;
         }
 
         return buscado.getId();
@@ -244,16 +246,15 @@ public class AdministradorServicioImpl implements AdministradorServicio{
         Optional<Pqrs> opcionalPqrs = pqrsRepository.findById(respuestaPqrsDTO.codigoPqrs());
 
         if(opcionalPqrs.isEmpty()){
-            throw new Exception("No existe esa pqrs");
+            throw new Exception("No existe la pqrs con el código " + respuestaPqrsDTO.codigoPqrs());
         }
         Optional<Administrador> admin = adminRepository.findById(respuestaPqrsDTO.codigoAdmin());
         Administrador buscado = admin.get();
 
         if(admin.isEmpty()){
-            throw new Exception("No existe el admin");
+            throw new Exception("No existe el admin con " + respuestaPqrsDTO.codigoAdmin());
         }
         RespuestaAdmin respuestaAdminNuevo = new RespuestaAdmin();
-
 
         respuestaAdminNuevo.setAdministrador(buscado);
         respuestaAdminNuevo.setFecha(LocalDateTime.now());
@@ -268,6 +269,11 @@ public class AdministradorServicioImpl implements AdministradorServicio{
     public List<ItemCitaAdminDTO> listarCitas() throws Exception {
 
         List<Consulta> consultas = consultaRepository.findAll();
+
+        if(consultas.isEmpty()){
+            throw new Exception("No hay consultas");
+        }
+
         List<ItemCitaAdminDTO> respuesta = new ArrayList<>();
         for(Consulta consulta : consultas){
             respuesta.add(new ItemCitaAdminDTO(
@@ -276,7 +282,6 @@ public class AdministradorServicioImpl implements AdministradorServicio{
                     consulta.getFecha(),
                     consulta.getCita().getMedico().getNombreCompleto()));
         }
-
         return respuesta;
     }
 }

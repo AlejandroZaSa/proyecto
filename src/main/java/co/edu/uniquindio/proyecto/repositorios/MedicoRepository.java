@@ -23,4 +23,6 @@ public interface MedicoRepository extends JpaRepository<Medico, Integer> {
 
     @Query("select c from Consulta c where c.cita.medico.id = :codigoMedico")
     List<Consulta> buscarConsultasMedico(int codigoMedico);
+
+    Medico findByEmailAndContrasenia(String email, String password);
 }
