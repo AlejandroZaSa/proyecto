@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,12 @@ public class MedicoServicioImpl implements MedicoServicio {
     @Override
     public List<ItemCitaMedicoDTO> listarCitasPendientes(int codigoMedico) throws Exception {
 
-        List<Cita> citasMedico = citaRepository.findAllByMedico_Id(codigoMedico);
+        List<Cita> citasMedico = citaRepository.findAllByMedico_IdAndFechaAfterOrEqual(codigoMedico, LocalDate.now());
+
+        if(citasMedico.isEmpty()){
+            throw new Exception("No tiene citas");
+        }
+
         List<ItemCitaMedicoDTO> respuesta = new ArrayList<>();
 
         for(Cita cita: citasMedico){
@@ -48,14 +54,13 @@ public class MedicoServicioImpl implements MedicoServicio {
     @Override
     public int atenderCita(AtencionMedicoDTO atencionMedicoDTO) throws Exception {
 
-        Consulta consultaNueva = new Consulta();
-
         Optional<Cita> cita = citaRepository.findById(atencionMedicoDTO.idCita());
 
         if(cita.isEmpty()){
             throw new Exception("No existe una cita con ese codigo");
         }
 
+        Consulta consultaNueva = new Consulta();
         Cita buscado = cita.get();
 
         consultaNueva.setFecha(buscado.getFecha());
@@ -66,7 +71,13 @@ public class MedicoServicioImpl implements MedicoServicio {
 
         Consulta consultaRegistrada = consultaRepository.save(consultaNueva);
 
-        for(RegistroTratamientoDTO registroTratamientoDTO: atencionMedicoDTO.tratamientoDTOList()) {
+        registrarTratamiento(atencionMedicoDTO.tratamientoDTOList(), consultaRegistrada);
+
+        return consultaRegistrada.getId();
+    }
+
+    private void registrarTratamiento(List<RegistroTratamientoDTO> registroTratamientoDTOS, Consulta consultaRegistrada) {
+        for(RegistroTratamientoDTO registroTratamientoDTO: registroTratamientoDTOS) {
             Tratamiento tratamientoNuevo = new Tratamiento();
             tratamientoNuevo.setConsulta(consultaRegistrada);
             tratamientoNuevo.setDosis(registroTratamientoDTO.dosis());
@@ -74,14 +85,16 @@ public class MedicoServicioImpl implements MedicoServicio {
             tratamientoNuevo.setMedicamento(registroTratamientoDTO.nombreMedicamento());
             tratamientoRepository.save(tratamientoNuevo);
         }
-
-        return consultaRegistrada.getId();
     }
 
     @Override
     public List<ItemConsultaMedicoPacienteDTO> listarCitaPaciente(int codigoPaciente) throws Exception {
 
         List<Consulta> consultasPaciente = pacienteRepository.buscarConsultasPaciente(codigoPaciente);
+
+        if(consultasPaciente.isEmpty()){
+            throw new Exception("El paciente no tiene consultas");
+        }
 
         List<ItemConsultaMedicoPacienteDTO> itemConsultaMedicoPacienteDTOList = new ArrayList<>();
 
@@ -104,16 +117,14 @@ public class MedicoServicioImpl implements MedicoServicio {
 
         Optional<Medico> medico = medicoRepository.findById(diaLibreDTO.codigoMedico());
 
-
         if(medico.isEmpty()){
             throw new Exception("El medico no existe");
         }
 
-        //Validamos que no tenga citas en la fecha deseada
-        Cita existeCita = citaRepository.buscarCitaEnFecha(diaLibreDTO.codigoMedico(), diaLibreDTO.fecha());
-        //Si existe una cita, lanzamos una excepción
-        if(existeCita != null){
-            throw new Exception("Ese día se tiene una cita pendiente, no se puede pedir el día " + diaLibreDTO.fecha() + " libre.");
+        List<Cita> citas = citaRepository.buscarCitaEnFecha(diaLibreDTO.codigoMedico(), diaLibreDTO.fecha());
+
+        if(!citas.isEmpty()){
+            throw new Exception("Ese día se tiene cita pendiente, no se puede pedir el día " + diaLibreDTO.fecha() + " libre.");
         }
 
         Medico buscado = medico.get();
@@ -129,15 +140,15 @@ public class MedicoServicioImpl implements MedicoServicio {
         return diaLibreRegistrado.getId();
     }
 
-    @Override
-    public void registrarTratamiento(List<RegistroTratamientoDTO> tratamientoDTOList) throws Exception {
-
-    }
 
     @Override
     public List<ItemConsultaMedicoPacienteDTO> listarCitasRealizadasMedico(int codigoMedico) throws Exception {
 
         List<Consulta> consultasMedico = medicoRepository.buscarConsultasMedico(codigoMedico);
+
+        if(consultasMedico.isEmpty()){
+            throw new Exception("No hay consultas");
+        }
 
         List<ItemConsultaMedicoPacienteDTO> itemConsultaMedicoPacienteDTOList = new ArrayList<>();
 
@@ -158,13 +169,13 @@ public class MedicoServicioImpl implements MedicoServicio {
     @Override
     public int generarFactura(RegistrarFacturaDTO facturaDTO) throws Exception {
 
-        Factura facturaNuevo = new Factura();
         Optional<Consulta> consulta = consultaRepository.findById(facturaDTO.idConsulta());
 
         if(consulta.isEmpty()){
             throw  new Exception("No existe la consulta con codigo "+ facturaDTO.idConsulta());
         }
 
+        Factura facturaNuevo = new Factura();
         Consulta consultaBuscada = consulta.get();
 
         facturaNuevo.setFecha(LocalDate.now());

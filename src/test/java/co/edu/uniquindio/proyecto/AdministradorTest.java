@@ -1,12 +1,11 @@
 package co.edu.uniquindio.proyecto;
 
-import co.edu.uniquindio.proyecto.dto.admin.ActualizarMedicoDTO;
-import co.edu.uniquindio.proyecto.dto.admin.HorarioDTO;
-import co.edu.uniquindio.proyecto.dto.admin.ItemMedicoDTO;
-import co.edu.uniquindio.proyecto.dto.admin.RegistroMedicoDTO;
+import co.edu.uniquindio.proyecto.dto.admin.*;
+import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
 import co.edu.uniquindio.proyecto.modelo.enums.Dia;
 import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
+import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 import co.edu.uniquindio.proyecto.servicios.interfaces.AdministradorServicio;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +80,15 @@ public class AdministradorTest {
     }
 
     @Test
+    public void eliminarMedico(){
+        try {
+            administradorServicio.eliminarMedico(1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
     public void listarMedicos() {
         List<ItemMedicoDTO> listaMedicos;
         try {
@@ -91,6 +99,69 @@ public class AdministradorTest {
 
         for (ItemMedicoDTO itemMedicoDTO : listaMedicos) {
             System.out.println(itemMedicoDTO.toString());
+        }
+    }
+
+    @Test
+    public void listarPqrs(){
+        List<ItemPqrsDTO> listaPqrs = null;
+        try {
+            listaPqrs = administradorServicio.listarPqrs();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        for(ItemPqrsDTO itemPqrsDTO : listaPqrs){
+            System.out.println(itemPqrsDTO.toString());
+        }
+    }
+
+    @Test
+    public void cambiarEstadoPqrs(){
+
+        EstadoPqrsDTO estadoPqrsDTO = new EstadoPqrsDTO(1, EstadoPqrs.EN_PROCESO);
+
+        try {
+            administradorServicio.cambiarEstadoPqrs(estadoPqrsDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void mostrarDetalleConsultaPqrs(){
+
+        try {
+            DetalleConsultaPqrsDTO detalleConsultaPqrsDTO = administradorServicio.mostrarDetalleConsultaPqrs(1);
+            System.out.println( detalleConsultaPqrsDTO.toString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void responderPqrs(){
+
+        RespuestaAdminPqrsDTO respuestaAdminPqrsDTO = new RespuestaAdminPqrsDTO(1,1,"Estamos tramitando su pqrs");
+
+        try {
+            int codigoRespuestaPqrs = administradorServicio.responderPqrs(respuestaAdminPqrsDTO);
+            System.out.println(codigoRespuestaPqrs);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    public void listarCitas(){
+        List<ItemCitaAdminDTO> citaAdminDTOList = null;
+        try {
+            citaAdminDTOList = administradorServicio.listarCitas();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        for(ItemCitaAdminDTO itemCitaAdminDTO : citaAdminDTOList){
+            System.out.println(itemCitaAdminDTO.toString());
         }
     }
 }

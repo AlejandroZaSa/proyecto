@@ -24,19 +24,24 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
     public void login(LoginDTO loginDTO) throws Exception{
 
         Medico medico = medicoRepository.findByEmailAndContrasenia(loginDTO.email(),loginDTO.password());
-        Paciente paciente = pacienteRepository.findByEmailAndContrasenia(loginDTO.email(),loginDTO.password());
-        Administrador admin = adminRepository.findByEmailAndContrasenia(loginDTO.email(),loginDTO.password());
 
-        if(medico==null&&paciente==null&&admin==null){
-            throw new Exception("El usuario no existe");
+        if(medico == null){
+
+            Paciente paciente = pacienteRepository.findByEmailAndContrasenia(loginDTO.email(),loginDTO.password());
+
+            if(paciente == null){
+
+                Administrador admin = adminRepository.findByEmailAndContrasenia(loginDTO.email(),loginDTO.password());
+
+                if(admin == null){
+                    throw new Exception("El usuario no existe");
+                }
+
+            }
+
         }
 
-        if(medico!=null){
-            //cargar pantalla de medico
-        }else if(paciente!=null){
-            //cargar pantalla paciente
-        }else if(admin!=null) {
-            //cargar pantalla admin
-        }
+        //generar un token
+
     }
 }

@@ -3,23 +3,17 @@ package co.edu.uniquindio.proyecto.servicios.implementacion;
 import co.edu.uniquindio.proyecto.dto.clinica.EpsDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.MensajeDTO;
-import co.edu.uniquindio.proyecto.modelo.entidades.RespuestaAdmin;
-import co.edu.uniquindio.proyecto.modelo.entidades.RespuestaPaciente;
-import co.edu.uniquindio.proyecto.modelo.entidades.Tratamiento;
+import co.edu.uniquindio.proyecto.modelo.entidades.*;
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 import co.edu.uniquindio.proyecto.modelo.enums.Medicamento;
 import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
-import co.edu.uniquindio.proyecto.repositorios.RespuestaAdminRepository;
-import co.edu.uniquindio.proyecto.repositorios.RespuestaPacienteRepository;
-import co.edu.uniquindio.proyecto.repositorios.TratamientoRepository;
+import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,39 +22,46 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     private final RespuestaAdminRepository respuestaAdminRepository;
     private final RespuestaPacienteRepository respuestaPacienteRepository;
     private final TratamientoRepository tratamientoRepository;
+    private final MedicoRepository medicoRepository;
+    private final PacienteRepository pacienteRepository;
+    private final AdminRepository adminRepository;
+    private final EpsRepository epsRepository;
 
     @Override
     public List<EstadoPqrs> cargarListaEstadosPqrs() {
-
-
-
-        return null;
+        return List.of( EstadoPqrs.values() );
     }
 
     @Override
     public List<TipoSangre> cargarTiposSangre() {
 
-        return null;
+        return List.of(TipoSangre.values());
     }
 
     @Override
     public List<EpsDTO> cargarEps() {
 
+        List<Eps> epsList = epsRepository.findAll();
 
-        return null;
+        List<EpsDTO> epsDTOList = new ArrayList<>();
+
+        for(Eps eps : epsList){
+            epsDTOList.add(new EpsDTO(eps.getId(), eps.getNombre()));
+        }
+
+        return epsDTOList;
     }
 
     @Override
     public List<Medicamento> cargarMedicamentos() {
 
-        return null;
+        return List.of(Medicamento.values());
     }
 
     @Override
     public List<Ciudad> cargarCiudades() {
 
-
-        return null;
+        return List.of(Ciudad.values());
     }
 
     @Override
@@ -91,7 +92,7 @@ public class ClinicaServicioImpl implements ClinicaServicio {
                     respuestaP.getPqrs().getNumeroRadicado()));
         }
 
-        Collections.sort(mensajes, (mensajeA, mensajeB) -> mensajeA.fecha().compareTo(mensajeB.fecha()));
+        mensajes.sort(Comparator.comparing(MensajeDTO::fecha));
 
         return mensajes;
     }
@@ -104,7 +105,27 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     @Override
     public void cambiarPassword(int codigoUsuario, String nuevaPassword) throws Exception {
 
+        Optional<Medico> medico = medicoRepository.findById(codigoUsuario);
+        Optional<Paciente> paciente = pacienteRepository.findById(codigoUsuario);
+        Optional<Administrador> admin = adminRepository.findById(codigoUsuario);
 
+        if(medico.isEmpty() && paciente.isEmpty() && admin.isEmpty()){
+            throw new Exception("El usuario no existe");
+        }
+
+        if(!medico.isEmpty()){
+            Medico buscado = medico.get();
+            buscado.setContrasenia(nuevaPassword);
+            medicoRepository.save(buscado);
+        }else if(!paciente.isEmpty()){
+            Paciente buscado = paciente.get();
+            buscado.setContrasenia(nuevaPassword);
+            pacienteRepository.save(buscado);
+        }else if(!admin.isEmpty()){
+            Administrador buscado = admin.get();
+            buscado.setContrasenia(nuevaPassword);
+            adminRepository.save(buscado);
+        }
 
     }
 

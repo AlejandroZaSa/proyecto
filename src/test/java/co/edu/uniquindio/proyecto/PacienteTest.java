@@ -42,6 +42,11 @@ public class PacienteTest {
     }
 
     @Test
+    public void cargarDatosPaciente(){
+
+    }
+
+    @Test
     public void actualizarPaciente(){
         ActualizarPacienteDTO actualizarPacienteDTO = new ActualizarPacienteDTO(
                 "Karla Sanz",
@@ -60,6 +65,52 @@ public class PacienteTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Test
+    public void eliminarCuenta(){
+
+    }
+
+    @Test
+    public void filtrarMedicoCita(){
+
+    }
+
+    @Test
+    public void agendarCita(){
+
+    }
+
+    @Test
+    public void crearPqrs(){
+
+    }
+
+    @Test
+    public void listarPqrsPaciente(){
+
+    }
+
+    @Test
+    public void responderPqrs(){
+
+    }
+
+    @Test
+    public void listarCitasPaciente(){
+
+    }
+
+
+    @Test
+    public void listarCitasPqrsPaciente(){
+
+    }
+
+    @Test
+    public void buscarConsulta(){
+
     }
 
 }

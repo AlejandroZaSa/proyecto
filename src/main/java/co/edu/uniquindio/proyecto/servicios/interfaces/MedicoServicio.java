@@ -14,8 +14,6 @@ public interface MedicoServicio {
     List<ItemConsultaMedicoPacienteDTO> listarCitaPaciente(int codigoPaciente) throws Exception;
 
     int agendarDiaLibre(DiaLibreDTO diaLibreDTO) throws Exception;
-
-    void registrarTratamiento(List<RegistroTratamientoDTO> tratamientoDTOList) throws Exception ;
     List<ItemConsultaMedicoPacienteDTO> listarCitasRealizadasMedico(int codigoMedico) throws Exception;
     int generarFactura(RegistrarFacturaDTO facturaDTO) throws Exception;
 

@@ -6,6 +6,7 @@ import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
 import co.edu.uniquindio.proyecto.modelo.entidades.*;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.AdministradorServicio;
+import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class AdministradorServicioImpl implements AdministradorServicio{
     private final RespuestaAdminRepository respuestaAdminRepository;
     private final AdminRepository adminRepository;
     private final ConsultaRepository consultaRepository;
+    private final ClinicaServicio clinicaServicio;
 
     @Override
     public int crearMedico(RegistroMedicoDTO medicoDTO) throws Exception {
@@ -51,7 +53,14 @@ public class AdministradorServicioImpl implements AdministradorServicio{
 
         Medico medicoRegistrado = medicoRepository.save(medicoNuevo);
 
-        for(HorarioDTO horario: medicoDTO.horarioDTO()){
+        registrarHorario(medicoDTO.horarioDTO(),medicoRegistrado);
+
+        return medicoRegistrado.getId();
+    }
+
+    private void registrarHorario(List<HorarioDTO> horarioDTOS, Medico medicoRegistrado) {
+
+        for(HorarioDTO horario: horarioDTOS){
             Horario horarioNuevo = new Horario();
             horarioNuevo.setMedico(medicoRegistrado);
             horarioNuevo.setDia(horario.dia());
@@ -59,8 +68,6 @@ public class AdministradorServicioImpl implements AdministradorServicio{
             horarioNuevo.setHoraFin(horario.horaFin());
             horarioRepository.save(horarioNuevo);
         }
-
-        return medicoRegistrado.getId();
     }
 
     private boolean estaRepetidoCorreo(String email) {
@@ -187,6 +194,10 @@ public class AdministradorServicioImpl implements AdministradorServicio{
 
         List<Pqrs> listaPqrs = pqrsRepository.findAll();
 
+        if(listaPqrs.isEmpty()){
+            throw new Exception("No hay pqrs");
+        }
+
         List<ItemPqrsDTO> respuesta = new ArrayList<>();
 
         for(Pqrs p: listaPqrs){
@@ -227,17 +238,19 @@ public class AdministradorServicioImpl implements AdministradorServicio{
 
         Pqrs buscado = opcional.get();
 
-        int idAtencion = buscado.getCita().getConsulta().getId();
+        Consulta consulta = buscado.getCita().getConsulta();
 
-        //ClinicaServicioImpl clinicaServicio = new ClinicaServicioImpl();
-        List<ItemTratamientoDTO> respuesta = null;
+        if(consulta!=null) {
 
+            List<ItemTratamientoDTO> respuesta = clinicaServicio.verTratamiento(consulta.getId());
 
-        return new DetalleConsultaPqrsDTO(buscado.getFechaCreacion(),
-                buscado.getCita().getConsulta().getNotasMedico(),
-                buscado.getCita().getConsulta().getDiagnostico(),
-                respuesta, buscado.getCita().getConsulta().getSintomas());
-
+            return new DetalleConsultaPqrsDTO(buscado.getFechaCreacion(),
+                    buscado.getCita().getConsulta().getNotasMedico(),
+                    buscado.getCita().getConsulta().getDiagnostico(),
+                    respuesta, buscado.getCita().getConsulta().getSintomas());
+        }else{
+            throw new Exception("No tiene consulta");
+        }
     }
 
     @Override
@@ -249,11 +262,13 @@ public class AdministradorServicioImpl implements AdministradorServicio{
             throw new Exception("No existe la pqrs con el código " + respuestaPqrsDTO.codigoPqrs());
         }
         Optional<Administrador> admin = adminRepository.findById(respuestaPqrsDTO.codigoAdmin());
-        Administrador buscado = admin.get();
 
         if(admin.isEmpty()){
             throw new Exception("No existe el admin con " + respuestaPqrsDTO.codigoAdmin());
         }
+
+        Administrador buscado = admin.get();
+
         RespuestaAdmin respuestaAdminNuevo = new RespuestaAdmin();
 
         respuestaAdminNuevo.setAdministrador(buscado);

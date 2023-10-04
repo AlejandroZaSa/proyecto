@@ -222,8 +222,6 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public int agendarCita(CitaDTO citaDTO) throws Exception {
 
-        Cita citaNueva = new Cita();
-
         Optional<Medico> medico = medicoRepository.findById(citaDTO.idMedico());
         Optional<Paciente> paciente = pacienteRepository.findById(citaDTO.idPaciente());
 
@@ -234,6 +232,15 @@ public class PacienteServicioImpl implements PacienteServicio {
         if(paciente.isEmpty()){
             throw new Exception("No existe ese paciente");
         }
+
+        int numeroCitasActivas =
+
+        if(){
+
+        }
+
+
+        Cita citaNueva = new Cita();
 
         citaNueva.setMotivo(citaDTO.motivo());
         citaNueva.setFecha(citaDTO.fecha());
@@ -271,8 +278,11 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public List<ItemPqrsDTO> listarPqrsPaciente(int idPaciente) throws Exception {
 
-        //error
         List<Pqrs> pqrsPaciente = pqrsRepository.findAllByCita_Paciente_Id(idPaciente);
+
+        if (pqrsPaciente.isEmpty()){
+            throw new Exception("No hay pqrs");
+        }
 
         List<ItemPqrsDTO> listaItemPqrsDTO = new ArrayList<>();
 
@@ -293,19 +303,19 @@ public class PacienteServicioImpl implements PacienteServicio {
             throw new Exception("No existe esa pqrs");
         }
         Optional<RespuestaAdmin> respuestaAdmin = respuestaAdminRepository.findById(respuestaPqrsDTO.respuestaAdmin());
-        RespuestaAdmin buscadoRespuesta = respuestaAdmin.get();
 
         if (respuestaAdmin.isEmpty()) {
             throw new Exception("No existe una respuesta con ese codigo");
         }
 
         Optional<Paciente> paciente = pacienteRepository.findById(respuestaPqrsDTO.codigoPaciente());
-        Paciente buscadoPaciente = paciente.get();
 
         if (paciente.isEmpty()) {
             throw new Exception("No existe el paciente");
         }
 
+        Paciente buscadoPaciente = paciente.get();
+        RespuestaAdmin buscadoRespuesta = respuestaAdmin.get();
         RespuestaPaciente respuestaPacienteNuevo = new RespuestaPaciente();
 
         respuestaPacienteNuevo.setRespuestaAdmin(buscadoRespuesta);
@@ -322,6 +332,11 @@ public class PacienteServicioImpl implements PacienteServicio {
     public List<ItemCitaPacienteDTO> listarCitasPaciente(int codigoPaciente) throws Exception {
 
         List<Cita> citasPaciente = citaRepository.findAllByPaciente_Id(codigoPaciente);
+
+        if(citasPaciente.isEmpty()){
+            throw new Exception("No ha citas");
+        }
+
         List<ItemCitaPacienteDTO> respuesta = new ArrayList<>();
 
         for(Cita cita: citasPaciente ){
@@ -350,6 +365,20 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public List<ItemConsultaPacienteDTO> buscarConsulta(String nombreMedico, LocalDate fecha, int idPaciente) throws Exception {
 
-        return null;
+        List<Consulta> consultas = consultaRepository.buscarConsulta(nombreMedico,fecha);
+
+        if(consultas.isEmpty()){
+            throw new Exception("No tiene consultas");
+        }
+
+        List<ItemConsultaPacienteDTO> consultaPacienteDTOS = new ArrayList<>();
+
+        for(Consulta consulta: consultas){
+            consultaPacienteDTOS.add(new ItemConsultaPacienteDTO(consulta.getId(),
+                    consulta.getFecha(),consulta.getCita().getMedico().getNombreCompleto(),
+                    consulta.getDiagnostico(), consulta.getSintomas()));
+        }
+
+        return consultaPacienteDTOS;
     }
 }
