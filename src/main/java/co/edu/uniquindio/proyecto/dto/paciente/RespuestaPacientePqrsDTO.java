@@ -1,14 +1,14 @@
 package co.edu.uniquindio.proyecto.dto.paciente;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record RespuestaPacientePqrsDTO(
-        @NotNull
+
         int codigoPqrs,
-        @NotNull
+        @NotBlank
         String mensaje,
-        @NotNull
+
         int respuestaAdmin,
-        @NotNull
+
         int codigoPaciente) {
 }

@@ -9,5 +9,5 @@ public enum TipoSangre {
     AB_POSITIVO,
     AB_NEGATIVO,
     O_POSITIVO,
-    O_NEGATIVO;
+    O_NEGATIVO
 }

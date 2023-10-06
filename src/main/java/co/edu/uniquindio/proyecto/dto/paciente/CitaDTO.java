@@ -1,20 +1,21 @@
 package co.edu.uniquindio.proyecto.dto.paciente;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record CitaDTO(
-        @NotNull
+        @NotBlank
         String motivo,
         @NotNull
         LocalDate fecha,
         @NotNull
         LocalTime hora,
-        @NotNull
+
         int idMedico,
-        @NotNull
+
         int idPaciente) {
 
 }

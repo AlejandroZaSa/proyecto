@@ -2,41 +2,40 @@ package co.edu.uniquindio.proyecto.dto.admin;
 
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
 import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.util.List;
 
-public record ActualizarMedicoDTO(@NotNull
-                                  @Length(max = 10)
+public record ActualizarMedicoDTO(@NotBlank
+                                  @Length(max = 10, message="La cedula debe tener máximo 10 caracteres")
                                   String cedula,
 
-                                  @NotNull
-                                  @Length(max = 30)
+                                  @NotBlank
+                                  @Length(max = 30, message="El nombre debe tener máximo 30 caracteres")
                                   String nombre,
 
-                                  @NotNull
+                                  @NotBlank
                                   String foto,
 
                                   @NotNull
                                   Ciudad ciudad,
 
-                                  @NotNull
-                                  @Length(max = 10)
+                                  @NotBlank
+                                  @Length(max = 10, message="El telefono debe tener máximo 10 caracteres")
                                   String telefono,
 
-                                  @NotNull @Email @Length(max = 50)
+                                  @NotBlank
+                                  @Email(message = "Ingrese una dirección de correo electrónico válida")
+                                  @Length(max = 50, message = "El correo debe tener máximo 50 caracteres")
                                   String email,
 
                                   @NotNull
                                   Especialidad especialidad,
 
-                                  @NotNull
+                                  @Positive
                                   float precioConsulta,
 
-                                  @NotNull
+                                  @NotEmpty
                                   List<HorarioDTO> horarioDTO) {
 }

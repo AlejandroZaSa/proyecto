@@ -1,7 +1,6 @@
 package co.edu.uniquindio.proyecto.repositorios;
 
 import co.edu.uniquindio.proyecto.modelo.entidades.Consulta;
-import co.edu.uniquindio.proyecto.modelo.entidades.Eps;
 import co.edu.uniquindio.proyecto.modelo.entidades.Paciente;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -4,6 +4,6 @@ public enum Ciudad {
     BOGOTA,
     MEDELLIN,
     CALI,
-    ARMENIA;
+    ARMENIA
 
 }

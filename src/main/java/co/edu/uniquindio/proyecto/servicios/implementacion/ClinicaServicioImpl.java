@@ -68,7 +68,16 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     public List<MensajeDTO> mostrarHistorialMensajesPqrs(int codigoPqrs) throws Exception {
 
         List<RespuestaAdmin> respuestaAdmin = respuestaAdminRepository.findAllByPqrs_NumeroRadicado(codigoPqrs);
+
+        if(respuestaAdmin.isEmpty()){
+            throw new Exception("No hay respuestas del administrador");
+        }
+
         List<RespuestaPaciente> respuestaPaciente = respuestaPacienteRepository.findAllByPqrs_NumeroRadicado(codigoPqrs);
+
+        if(respuestaAdmin.isEmpty()){
+            throw new Exception("No hay respuestas del paciente");
+        }
 
         List<MensajeDTO> mensajes = new ArrayList<>();
 
@@ -110,18 +119,18 @@ public class ClinicaServicioImpl implements ClinicaServicio {
         Optional<Administrador> admin = adminRepository.findById(codigoUsuario);
 
         if(medico.isEmpty() && paciente.isEmpty() && admin.isEmpty()){
-            throw new Exception("El usuario no existe");
+            throw new Exception("El usuario con el código "+codigoUsuario+" no existe");
         }
 
-        if(!medico.isEmpty()){
+        if(medico.isPresent()){
             Medico buscado = medico.get();
             buscado.setContrasenia(nuevaPassword);
             medicoRepository.save(buscado);
-        }else if(!paciente.isEmpty()){
+        }else if(paciente.isPresent()){
             Paciente buscado = paciente.get();
             buscado.setContrasenia(nuevaPassword);
             pacienteRepository.save(buscado);
-        }else if(!admin.isEmpty()){
+        }else {
             Administrador buscado = admin.get();
             buscado.setContrasenia(nuevaPassword);
             adminRepository.save(buscado);
@@ -130,9 +139,14 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     }
 
     @Override
-    public List<ItemTratamientoDTO> verTratamiento(int codigoConsulta) {
+    public List<ItemTratamientoDTO> verTratamiento(int codigoConsulta) throws Exception{
 
         List<Tratamiento> listaTratamientos = tratamientoRepository.findAllByConsulta_id(codigoConsulta);
+
+        if(listaTratamientos.isEmpty()){
+            throw new Exception("No hay tratamientos para la consulta con código "+ codigoConsulta);
+        }
+
         List<ItemTratamientoDTO> respuesta = new ArrayList<>();
 
         for(Tratamiento tratamiento : listaTratamientos){

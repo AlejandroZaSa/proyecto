@@ -1,12 +1,11 @@
 package co.edu.uniquindio.proyecto.dto.paciente;
 
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record PQRSPacienteDTO (
-        @NotNull
         int codigoCita,
 
-        @NotNull
+        @NotBlank
         String motivo){
 }

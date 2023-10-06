@@ -1,12 +1,15 @@
 package co.edu.uniquindio.proyecto.servicios.implementacion;
 
 import co.edu.uniquindio.proyecto.dto.admin.*;
+import co.edu.uniquindio.proyecto.dto.clinica.EmailDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
 import co.edu.uniquindio.proyecto.modelo.entidades.*;
+import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.AdministradorServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
+import co.edu.uniquindio.proyecto.servicios.interfaces.EmailServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +29,16 @@ public class AdministradorServicioImpl implements AdministradorServicio{
     private final AdminRepository adminRepository;
     private final ConsultaRepository consultaRepository;
     private final ClinicaServicio clinicaServicio;
+    private final EmailServicio emailServicio;
 
     @Override
     public int crearMedico(RegistroMedicoDTO medicoDTO) throws Exception {
 
-        if(!estaRepetidoCorreo(medicoDTO.email())){
-            throw new Exception ("El correo ya está en uso");
+        if(estaRepetidoCorreo(medicoDTO.email())){
+            throw new Exception ("El correo "+medicoDTO.email()+" ya está en uso");
         }
-        if(!estaRepetidaCedula(medicoDTO.cedula())){
-            throw new Exception ("La cedula ya se encuentra registrada");
+        if(estaRepetidaCedula(medicoDTO.cedula())){
+            throw new Exception ("La cedula "+medicoDTO.cedula()+" ya se encuentra registrada");
         }
 
         Medico medicoNuevo = new Medico();
@@ -71,11 +75,11 @@ public class AdministradorServicioImpl implements AdministradorServicio{
     }
 
     private boolean estaRepetidoCorreo(String email) {
-        return medicoRepository.buscarPorCorreo(email) == null;
+        return medicoRepository.buscarPorCorreo(email) != null;
     }
 
     private boolean estaRepetidaCedula(String cedula) {
-        return medicoRepository.buscarPorCedula(cedula) == null;
+        return medicoRepository.buscarPorCedula(cedula) != null;
     }
 
     @Override
@@ -123,10 +127,10 @@ public class AdministradorServicioImpl implements AdministradorServicio{
 
         Medico buscado = opcional.get();
 
-        if(!estaRepetidoCorreo(medico.email()) && (!buscado.getEmail().equals(medico.email())) ){
+        if(estaRepetidoCorreo(medico.email()) && (!buscado.getEmail().equals(medico.email())) ){
             throw new Exception ("El correo ya está en uso");
         }
-        if(!estaRepetidaCedula(medico.cedula()) && (!buscado.getCedula().equals(medico.cedula()))){
+        if(estaRepetidaCedula(medico.cedula()) && (!buscado.getCedula().equals(medico.cedula()))){
             throw new Exception ("La cedula ya se encuentra registrada");
         }
 
@@ -142,6 +146,12 @@ public class AdministradorServicioImpl implements AdministradorServicio{
         medicoRepository.save(buscado);
 
         List<Horario> horarios  = horarioRepository.findAllByMedico_Id(buscado.getId());
+
+        //Se elimino un horario que antes tenia el medico
+        if(horarios.size() > medico.horarioDTO().size()){
+
+        }
+
         int posicion = 0;
         for(Horario horario: horarios){
             horario.setMedico(buscado);
@@ -177,16 +187,14 @@ public class AdministradorServicioImpl implements AdministradorServicio{
         List<Medico> medicos = medicoRepository.findAll();
 
         if(medicos.isEmpty()){
-            throw new Exception("No hay medicos registrados");
+            throw new Exception("No hay médicos registrados");
         }
 
-        List<ItemMedicoDTO> respuesta = medicos.stream().map(m -> new ItemMedicoDTO(
+        return medicos.stream().map(m -> new ItemMedicoDTO(
                 m.getId(),
                 m.getCedula(),
                 m.getNombreCompleto(),
                 m.getEspecialidad(),m.isEstado())).toList();
-
-        return respuesta;
     }
 
     @Override
@@ -195,7 +203,7 @@ public class AdministradorServicioImpl implements AdministradorServicio{
         List<Pqrs> listaPqrs = pqrsRepository.findAll();
 
         if(listaPqrs.isEmpty()){
-            throw new Exception("No hay pqrs");
+            throw new Exception("No hay pqrs registradas");
         }
 
         List<ItemPqrsDTO> respuesta = new ArrayList<>();
@@ -249,7 +257,7 @@ public class AdministradorServicioImpl implements AdministradorServicio{
                     buscado.getCita().getConsulta().getDiagnostico(),
                     respuesta, buscado.getCita().getConsulta().getSintomas());
         }else{
-            throw new Exception("No tiene consulta");
+            throw new Exception("La cita no tiene asociada una consulta");
         }
     }
 
@@ -264,19 +272,23 @@ public class AdministradorServicioImpl implements AdministradorServicio{
         Optional<Administrador> admin = adminRepository.findById(respuestaPqrsDTO.codigoAdmin());
 
         if(admin.isEmpty()){
-            throw new Exception("No existe el admin con " + respuestaPqrsDTO.codigoAdmin());
+            throw new Exception("No existe el administrador con código " + respuestaPqrsDTO.codigoAdmin());
         }
 
         Administrador buscado = admin.get();
-
+        Pqrs pqrs = opcionalPqrs.get();
         RespuestaAdmin respuestaAdminNuevo = new RespuestaAdmin();
 
         respuestaAdminNuevo.setAdministrador(buscado);
         respuestaAdminNuevo.setFecha(LocalDateTime.now());
-        respuestaAdminNuevo.setPqrs(opcionalPqrs.get());
+        respuestaAdminNuevo.setPqrs(pqrs);
         respuestaAdminNuevo.setMensaje(respuestaPqrsDTO.mensaje());
 
         RespuestaAdmin respuestaAdminRegistrada = respuestaAdminRepository.save(respuestaAdminNuevo);
+        pqrs.setEstadoPqrs(EstadoPqrs.EN_PROCESO);
+        pqrsRepository.save(pqrs);
+
+        emailServicio.enviarEmail(new EmailDTO("Asunto", "Cuerpo mensaje", "Correo destino"));
         return respuestaAdminRegistrada.getId();
     }
 
@@ -286,7 +298,7 @@ public class AdministradorServicioImpl implements AdministradorServicio{
         List<Consulta> consultas = consultaRepository.findAll();
 
         if(consultas.isEmpty()){
-            throw new Exception("No hay consultas");
+            throw new Exception("No hay consultas registradas");
         }
 
         List<ItemCitaAdminDTO> respuesta = new ArrayList<>();

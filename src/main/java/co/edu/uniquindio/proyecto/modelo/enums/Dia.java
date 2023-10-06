@@ -8,6 +8,6 @@ public enum Dia {
     JUEVES,
     VIERNES,
     SABADO,
-    DOMINGO;
+    DOMINGO
 
 }

@@ -21,7 +21,7 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
     private final AdminRepository adminRepository;
 
     @Override
-    public void login(LoginDTO loginDTO) throws Exception{
+    public String login(LoginDTO loginDTO) throws Exception{
 
         Medico medico = medicoRepository.findByEmailAndContrasenia(loginDTO.email(),loginDTO.password());
 
@@ -42,6 +42,6 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
         }
 
         //generar un token
-
+        return "";
     }
 }

@@ -1,6 +1,5 @@
 package co.edu.uniquindio.proyecto.modelo.entidades;
 
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoFactura;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,9 +26,6 @@ public class Factura implements Serializable{
 
     @Column(nullable = false)
     private float valor;
-
-    @Column(nullable = false)
-    private EstadoFactura estado;
 
     @JoinColumn(nullable = false)
     @OneToOne

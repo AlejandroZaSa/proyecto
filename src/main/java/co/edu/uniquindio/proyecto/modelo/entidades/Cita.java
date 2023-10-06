@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class Cita implements Serializable{
     private String motivo;
 
     @Column(nullable = false)
-    private LocalDate fechaCreacion;
+    private LocalDateTime fechaCreacion;
 
     @Column(nullable = false)
     private LocalDate fecha;

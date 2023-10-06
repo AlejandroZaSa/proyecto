@@ -10,5 +10,5 @@ public enum Especialidad {
     OTORRINOLARINGOLOGIA,
     PEDIATRIA,
     PSIQUIATRIA,
-    UROLOGIA;
+    UROLOGIA
 }

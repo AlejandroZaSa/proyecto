@@ -8,8 +8,8 @@ import java.time.LocalTime;
 public record HorarioDTO (
         @NotNull
         Dia dia,
-                          @NotNull
-                          LocalTime horaInicio,
+        @NotNull
+        LocalTime horaInicio,
         @NotNull
         LocalTime horaFin){
 }

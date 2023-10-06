@@ -32,5 +32,5 @@ public enum Medicamento {
     VITAMINA_C,
     VITAMINA_D,
     VITAMINA_E,
-    VITAMINA_A;
+    VITAMINA_A
 }

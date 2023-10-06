@@ -2,44 +2,40 @@ package co.edu.uniquindio.proyecto.dto.paciente;
 
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
 import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record RegistroPacienteDTO(
 
-        @NotNull
-                @Length(max = 30)
+        @NotBlank
+        @Length(max = 30, message="El nombre debe tener máximo 30 caracteres")
         String nombre,
-        @NotNull
-        @Length(max = 10)
+
+        @NotBlank
+        @Length(max = 10, message="La cedula debe tener máximo 10 caracteres")
         String cedula,
-        @NotNull
-        @Length(max = 10)
+
+        @NotBlank
+        @Length(max = 10, message="El telefono debe tener máximo 10 caracteres")
         String telefono,
-        @NotNull
-        @Email
-        @Length(max = 50)
+        @NotBlank
+        @Email(message = "Ingrese una dirección de correo electrónico válida")
+        @Length(max = 50, message = "El correo debe tener máximo 50 caracteres")
         String email,
-        @NotNull
-        @Length(max = 20)
+        @NotBlank
         String password,
-        @NotNull
+        @NotBlank
         String foto,
         @NotNull
+        @Past(message = "Seleccione una fecha de nacimiento correcta")
         LocalDate fechaNacimiento,
-
         @NotNull
         Ciudad ciudad,
-        @NotNull
         int eps,
         @NotNull
         TipoSangre tipoSangre,
-        @NotNull
+        @NotBlank
         String alergias) {
 }

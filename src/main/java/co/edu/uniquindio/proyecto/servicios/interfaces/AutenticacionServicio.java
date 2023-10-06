@@ -4,5 +4,5 @@ import co.edu.uniquindio.proyecto.dto.clinica.LoginDTO;
 
 public interface AutenticacionServicio {
 
-    void login(LoginDTO loginDTO) throws Exception;
+    String login(LoginDTO loginDTO) throws Exception;
 }

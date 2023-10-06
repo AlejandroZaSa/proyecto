@@ -1,15 +1,13 @@
 package co.edu.uniquindio.proyecto.dto.admin;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record RespuestaAdminPqrsDTO(
 
-        @NotNull
         int codigoPqrs,
 
-        @NotNull
         int codigoAdmin,
 
-        @NotNull
+        @NotBlank
         String mensaje) {
 }

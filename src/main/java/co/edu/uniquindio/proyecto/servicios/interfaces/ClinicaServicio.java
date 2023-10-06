@@ -28,6 +28,6 @@ public interface ClinicaServicio {
 
     void cambiarPassword(int codigoUsuario, String nuevaPassword) throws Exception;
 
-    List<ItemTratamientoDTO> verTratamiento(int codigoConsulta);
+    List<ItemTratamientoDTO> verTratamiento(int codigoConsulta) throws Exception;
 
 }

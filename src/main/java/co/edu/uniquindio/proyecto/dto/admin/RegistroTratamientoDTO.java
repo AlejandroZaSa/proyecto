@@ -1,15 +1,12 @@
 package co.edu.uniquindio.proyecto.dto.admin;
 
 import co.edu.uniquindio.proyecto.modelo.enums.Medicamento;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record RegistroTratamientoDTO(int dosis,
 
-                                     @NotNull
                                      int codigConsulta,
-                                     @NotNull
+                                     @NotBlank
                                      String observaciones,
 
                                      Medicamento nombreMedicamento) {

@@ -7,6 +7,8 @@ import co.edu.uniquindio.proyecto.modelo.enums.Dia;
 import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 import co.edu.uniquindio.proyecto.servicios.interfaces.AdministradorServicio;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
+@Transactional
 public class AdministradorTest {
 
     @Autowired
@@ -39,7 +42,10 @@ public class AdministradorTest {
                 horarios);
 
         try {
-            administradorServicio.crearMedico(registroMedicoDTO);
+            int codigoAdmin = administradorServicio.crearMedico(registroMedicoDTO);
+
+            Assertions.assertEquals(1, codigoAdmin);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -61,7 +67,8 @@ public class AdministradorTest {
                 horarios);
 
         try {
-            administradorServicio.actualizarMedico(1, actualizarMedicoDTO);
+            int codigoMedico = administradorServicio.actualizarMedico(1, actualizarMedicoDTO);
+            System.out.println(codigoMedico);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

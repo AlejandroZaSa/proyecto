@@ -9,31 +9,33 @@ import java.util.List;
 
 public record RegistroMedicoDTO(
 
-        @NotNull
-        @Length(max = 10)
+        @NotBlank
+        @Length(max = 10, message="La cedula debe tener máximo 10 caracteres")
         String cedula,
 
-        @NotNull
-        @Length(max = 30)
+        @NotBlank
+        @Length(max = 30, message="El nombre debe tener máximo 30 caracteres")
         String nombre,
 
-        @NotNull
+        @NotBlank
         String foto,
 
         @NotNull
         Ciudad ciudad,
 
-        @NotNull
-        @Length(max = 10)
+        @NotBlank
+        @Length(max = 10, message="El telefono debe tener máximo 10 caracteres")
         String telefono,
 
-        @NotNull @Email @Length(max = 50)
+        @NotBlank
+        @Email(message = "Ingrese una dirección de correo electrónico válida")
+        @Length(max = 50, message = "El correo debe tener máximo 50 caracteres")
         String email,
 
-        @NotNull
+        @Positive
         float precioConsulta,
 
-        @NotNull
+        @NotBlank
         String password,
 
         @NotNull

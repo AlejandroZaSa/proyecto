@@ -4,8 +4,9 @@ import co.edu.uniquindio.proyecto.dto.admin.RegistroTratamientoDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.EmailDTO;
 import co.edu.uniquindio.proyecto.dto.medico.*;
 import co.edu.uniquindio.proyecto.modelo.entidades.*;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoFactura;
+import co.edu.uniquindio.proyecto.modelo.enums.EstadoCita;
 import co.edu.uniquindio.proyecto.repositorios.*;
+import co.edu.uniquindio.proyecto.servicios.interfaces.EmailServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.MedicoServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class MedicoServicioImpl implements MedicoServicio {
     private final TratamientoRepository tratamientoRepository;
     private final FacturaRepository facturaRepository;
     private final PacienteRepository pacienteRepository;
+    private final EmailServicio emailServicio;
 
     @Override
     public List<ItemCitaMedicoDTO> listarCitasPendientes(int codigoMedico) throws Exception {
@@ -34,7 +36,7 @@ public class MedicoServicioImpl implements MedicoServicio {
         List<Cita> citasMedico = citaRepository.findAllByMedico_IdAndFechaAfterOrEqual(codigoMedico, LocalDate.now());
 
         if(citasMedico.isEmpty()){
-            throw new Exception("No tiene citas");
+            throw new Exception("No tienes citas");
         }
 
         List<ItemCitaMedicoDTO> respuesta = new ArrayList<>();
@@ -57,7 +59,7 @@ public class MedicoServicioImpl implements MedicoServicio {
         Optional<Cita> cita = citaRepository.findById(atencionMedicoDTO.idCita());
 
         if(cita.isEmpty()){
-            throw new Exception("No existe una cita con ese codigo");
+            throw new Exception("No existe una cita con el código"+atencionMedicoDTO.idCita());
         }
 
         Consulta consultaNueva = new Consulta();
@@ -72,6 +74,10 @@ public class MedicoServicioImpl implements MedicoServicio {
         Consulta consultaRegistrada = consultaRepository.save(consultaNueva);
 
         registrarTratamiento(atencionMedicoDTO.tratamientoDTOList(), consultaRegistrada);
+
+        buscado.setEstadoCita(EstadoCita.COMPLETADA);
+
+        citaRepository.save(buscado);
 
         return consultaRegistrada.getId();
     }
@@ -118,13 +124,13 @@ public class MedicoServicioImpl implements MedicoServicio {
         Optional<Medico> medico = medicoRepository.findById(diaLibreDTO.codigoMedico());
 
         if(medico.isEmpty()){
-            throw new Exception("El medico no existe");
+            throw new Exception("El medico con código "+diaLibreDTO.codigoMedico()+" no existe");
         }
 
-        List<Cita> citas = citaRepository.buscarCitaEnFecha(diaLibreDTO.codigoMedico(), diaLibreDTO.fecha());
+        List<Cita> citas = citaRepository.obtenerCitasFecha(diaLibreDTO.codigoMedico(), diaLibreDTO.fecha());
 
         if(!citas.isEmpty()){
-            throw new Exception("Ese día se tiene cita pendiente, no se puede pedir el día " + diaLibreDTO.fecha() + " libre.");
+            throw new Exception("Ese día tienes cita(s) pendiente(s), no se puede pedir el día " + diaLibreDTO.fecha() + " libre. Revisa tu agenda");
         }
 
         Medico buscado = medico.get();
@@ -132,7 +138,6 @@ public class MedicoServicioImpl implements MedicoServicio {
         DiaLibre diaLibreNuevo = new DiaLibre();
 
         diaLibreNuevo.setMedico(buscado);
-        diaLibreNuevo.setEstado(true);
         diaLibreNuevo.setFecha(diaLibreDTO.fecha());
 
         DiaLibre diaLibreRegistrado = diaLibreRepository.save(diaLibreNuevo);
@@ -167,24 +172,25 @@ public class MedicoServicioImpl implements MedicoServicio {
     }
 
     @Override
-    public int generarFactura(RegistrarFacturaDTO facturaDTO) throws Exception {
+    public int generarFactura(int idConsulta) throws Exception {
 
-        Optional<Consulta> consulta = consultaRepository.findById(facturaDTO.idConsulta());
+        Optional<Consulta> consulta = consultaRepository.findById(idConsulta);
 
         if(consulta.isEmpty()){
-            throw  new Exception("No existe la consulta con codigo "+ facturaDTO.idConsulta());
+            throw  new Exception("No existe la consulta con codigo "+ idConsulta);
         }
 
         Factura facturaNuevo = new Factura();
         Consulta consultaBuscada = consulta.get();
 
         facturaNuevo.setFecha(LocalDate.now());
-        facturaNuevo.setValor(5);
-        facturaNuevo.setConcepto(facturaDTO.concepto());
-        facturaNuevo.setEstado(EstadoFactura.ENVIADA);
+        facturaNuevo.setValor(consultaBuscada.getCita().getMedico().getCostoConsulta() - (consultaBuscada.getCita().getMedico().getCostoConsulta()*
+                consultaBuscada.getCita().getPaciente().getEps().getPorcentajeConsulta()));
+        facturaNuevo.setConcepto("Consulta por: " +consultaBuscada.getCita().getMedico().getEspecialidad());
         facturaNuevo.setConsulta(consultaBuscada);
-
         Factura facturaRegistrada = facturaRepository.save(facturaNuevo);
+
+        emailServicio.enviarEmail(new EmailDTO("Asunto", "Cuerpo mensaje", "Correo destino"));
 
         return facturaRegistrada.getId();
     }
@@ -195,7 +201,7 @@ public class MedicoServicioImpl implements MedicoServicio {
         Optional<Factura> factura = facturaRepository.findByConsulta_Id(codigoConsulta);
 
         if(factura.isEmpty()){
-            throw new Exception("No existe una factura asociado a la consulta " + codigoConsulta);
+            throw new Exception("No existe una factura asociado a la consulta con código " + codigoConsulta);
         }
 
         Factura facturaBuscada = factura.get();
@@ -203,11 +209,6 @@ public class MedicoServicioImpl implements MedicoServicio {
         return new DetalleFacturaDTO(facturaBuscada.getId(),
                 facturaBuscada.getFecha(),
                 facturaBuscada.getValor(),
-                facturaBuscada.getEstado());
-    }
-
-    @Override
-    public EmailDTO enviarCorreoFactura(RegistrarFacturaDTO facturaDTO) {
-        return null;
+                facturaBuscada.getConcepto());
     }
 }

@@ -4,5 +4,5 @@ public enum EstadoCita {
 
     PROGRAMADA,
     COMPLETADA,
-    CANCELADA;
+    CANCELADA
 }

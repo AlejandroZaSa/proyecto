@@ -4,5 +4,5 @@ public enum EstadoPqrs {
     NUEVO,
     EN_PROCESO,
     RESUELTO,
-    ARCHIVADO;
+    ARCHIVADO
 }
