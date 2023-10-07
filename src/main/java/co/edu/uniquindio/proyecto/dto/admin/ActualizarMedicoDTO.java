@@ -37,5 +37,5 @@ public record ActualizarMedicoDTO(@NotBlank
                                   float precioConsulta,
 
                                   @NotEmpty
-                                  List<HorarioDTO> horarioDTO) {
+                                  List<ActualizarHorarioDTO> horarioDTO) {
 }

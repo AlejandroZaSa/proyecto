@@ -25,10 +25,12 @@ public class ImagenesServicioImpl  {
         cloudinary = new Cloudinary(config);
     }
     @Override
-    public Map subirImagen(MultipartFile file) throws Exception{
-        File file = convertir(imagen);
-        return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder",
-                String.format("uniquindio/proyecto/fotos", carpeta)));
+    public Map subirImagen(MultipartFile imagen) throws Exception {
+    File file = convertir(imagen);
+
+    return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder",
+
+    "uniquindio/proyecto/fotos"));
     }
     @Override
     public Map eliminarImagen(String idImagen) throws Exception{

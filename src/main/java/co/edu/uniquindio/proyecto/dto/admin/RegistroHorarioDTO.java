@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalTime;
 
-public record HorarioDTO (
+public record RegistroHorarioDTO(
         @NotNull
         Dia dia,
         @NotNull

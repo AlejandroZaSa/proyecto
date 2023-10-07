@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.implementacion;
 
+import co.edu.uniquindio.proyecto.dto.clinica.EmailDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.EpsDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.MensajeDTO;
@@ -10,6 +11,7 @@ import co.edu.uniquindio.proyecto.modelo.enums.Medicamento;
 import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
+import co.edu.uniquindio.proyecto.servicios.interfaces.EmailServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,7 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     private final PacienteRepository pacienteRepository;
     private final AdminRepository adminRepository;
     private final EpsRepository epsRepository;
+    private final EmailServicio emailServicio;
 
     @Override
     public List<EstadoPqrs> cargarListaEstadosPqrs() {
@@ -108,6 +111,9 @@ public class ClinicaServicioImpl implements ClinicaServicio {
 
     @Override
     public void enviarLinkRecuperacion(String email) throws Exception {
+
+        emailServicio.enviarEmail(new EmailDTO("Recupera tu cuenta", email, "link"));
+
 
     }
 

@@ -42,5 +42,5 @@ public record RegistroMedicoDTO(
         Especialidad especialidad,
 
         @NotEmpty
-        List<HorarioDTO> horarioDTO) {
+        List<RegistroHorarioDTO> horarioDTO) {
 }

@@ -60,6 +60,8 @@ public class MedicoServicioImpl implements MedicoServicio {
 
         if(cita.isEmpty()){
             throw new Exception("No existe una cita con el código"+atencionMedicoDTO.idCita());
+        }else if(cita.get().getFecha().isAfter(LocalDate.now())){
+            throw new Exception("La cita no se puede atender dado que la fecha de atención es: "+cita.get().getFecha());
         }
 
         Consulta consultaNueva = new Consulta();
@@ -127,6 +129,12 @@ public class MedicoServicioImpl implements MedicoServicio {
             throw new Exception("El medico con código "+diaLibreDTO.codigoMedico()+" no existe");
         }
 
+        Optional<DiaLibre> diaLibre = diaLibreRepository.findByMedico_IdAndFechaAfterOrEqual(diaLibreDTO.codigoMedico(),LocalDate.now());
+
+        if(!diaLibre.isEmpty()){
+            throw new Exception("Ya tiene un día libre activo con fecha "+diaLibre.get().getFecha());
+        }
+
         List<Cita> citas = citaRepository.obtenerCitasFecha(diaLibreDTO.codigoMedico(), diaLibreDTO.fecha());
 
         if(!citas.isEmpty()){
@@ -190,7 +198,9 @@ public class MedicoServicioImpl implements MedicoServicio {
         facturaNuevo.setConsulta(consultaBuscada);
         Factura facturaRegistrada = facturaRepository.save(facturaNuevo);
 
-        emailServicio.enviarEmail(new EmailDTO("Asunto", "Cuerpo mensaje", "Correo destino"));
+        emailServicio.enviarEmail(new EmailDTO("Factura Consulta",
+                consultaBuscada.getCita().getPaciente().getEmail(), facturaRegistrada.getConcepto() + " Valor: " +
+                facturaRegistrada.getValor()));
 
         return facturaRegistrada.getId();
     }

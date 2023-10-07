@@ -26,7 +26,6 @@ public class Horario implements Serializable{
     @Column(nullable = false)
     private LocalTime horaFin;
 
-    //dia puede ser enum
     @Column(nullable = false)
     private Dia dia;
 

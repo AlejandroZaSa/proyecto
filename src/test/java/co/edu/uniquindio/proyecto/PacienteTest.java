@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @SpringBootTest
@@ -30,7 +31,7 @@ public class PacienteTest {
                 "pass_prueba",
                 "url_foto",
                 LocalDate.of(2003,4,6),
-                Ciudad.MEDELLIN,
+                Ciudad.BOGOTA,
                 1,
                 TipoSangre.B_POSITIVO,
                 "Rinitis"
@@ -111,11 +112,33 @@ public class PacienteTest {
 
         //lo de la hora es lo que selecciono de la tabla como lo represento acá
         //pacienteServicio.agendarCita(new CitaDTO("Migraña continua",LocalDate.of(2023,10,5),""));
+
+        CitaDTO citaDTO = new CitaDTO("Enfermedad", LocalDate.of(2023,10,5), LocalTime.of(7,8,0),1,1);
+
+        int codigoCita;
+
+        try {
+            codigoCita = pacienteServicio.agendarCita(citaDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println(codigoCita);
     }
 
     @Test
     public void crearPqrs(){
+        PQRSPacienteDTO pqrsPacienteDTO = new PQRSPacienteDTO(1, "Enfermedad");
 
+        int numRadicado;
+
+        try {
+            numRadicado = pacienteServicio.crearPqrs(pqrsPacienteDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println(numRadicado);
     }
 
     @Test
@@ -138,7 +161,17 @@ public class PacienteTest {
 
     @Test
     public void responderPqrs(){
+        RespuestaPacientePqrsDTO respuestaPacientePqrsDTO = new RespuestaPacientePqrsDTO(1, "Mensaje", 1,1);
 
+        int idRespuestaPaciente;
+
+        try {
+            idRespuestaPaciente = pacienteServicio.responderPqrs(respuestaPacientePqrsDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println(idRespuestaPaciente);
     }
 
     @Test
@@ -179,7 +212,19 @@ public class PacienteTest {
 
     @Test
     public void buscarConsulta(){
+        List<ItemConsultaPacienteDTO> listaConsultasPaciente;
 
+        try {
+            listaConsultasPaciente  = pacienteServicio.buscarConsulta(" NOMBREMEDICO !!!!!!!!!!", LocalDate.of(2023,10,5),1);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        if (listaConsultasPaciente != null){
+            for (ItemConsultaPacienteDTO  itemConsultaPacienteDTO: listaConsultasPaciente){
+                System.out.println(listaConsultasPaciente.toString());
+            }
+        }
     }
 
 }

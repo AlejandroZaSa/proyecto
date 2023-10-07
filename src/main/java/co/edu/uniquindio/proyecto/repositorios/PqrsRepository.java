@@ -1,6 +1,7 @@
 package co.edu.uniquindio.proyecto.repositorios;
 
 import co.edu.uniquindio.proyecto.modelo.entidades.Pqrs;
+import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,6 @@ public interface PqrsRepository extends JpaRepository<Pqrs, Integer> {
 
     List<Pqrs> findAllByCita_Paciente_Id(int idPaciente);
 
+    List<Pqrs> findAllByCita_Paciente_IdAndEstadoPqrsEquals(int idPaciente, EstadoPqrs estadoPqrs);
 
 }
