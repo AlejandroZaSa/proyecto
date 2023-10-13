@@ -159,8 +159,12 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                if( actualizarHorario(horarios, hdto) ){
                    Horario h = horarioRepository.findById(hdto.codigoHorario()).get();
                    h.setDia(hdto.dia());
-                   h.setHoraInicio(hdto.horaInicio());
-                   h.setHoraFin(hdto.horaFin());
+                   if(hdto.horaInicio().isBefore(hdto.horaFin())){
+                       h.setHoraInicio(hdto.horaInicio());
+                       h.setHoraFin(hdto.horaFin());
+                   }else{
+                       throw new Exception("La hora de inicio no puede estar despues a la hora de fin");
+                   }
                    horarioRepository.save(h);
                }else{
                    horarioRepository.deleteById(hdto.codigoHorario());
@@ -169,8 +173,12 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                Horario h = new Horario();
                h.setMedico(buscado);
                h.setDia(hdto.dia());
-               h.setHoraInicio(hdto.horaInicio());
-               h.setHoraFin(hdto.horaFin());
+               if(hdto.horaInicio().isBefore(hdto.horaFin())){
+                   h.setHoraInicio(hdto.horaInicio());
+                   h.setHoraFin(hdto.horaFin());
+               }else{
+                   throw new Exception("La hora de inicio no puede estar despues a la hora de fin");
+               }
                horarioRepository.save(h);
            }
         }

@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto;
 
+import co.edu.uniquindio.proyecto.dto.admin.ActualizarMedicoDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.dto.paciente.*;
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
@@ -7,6 +8,7 @@ import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
 import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
 import co.edu.uniquindio.proyecto.servicios.interfaces.PacienteServicio;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,7 +27,7 @@ public class PacienteTest {
 
     @Test
     @Sql("classpath:dataset.sql")
-    public void agregarPaciente(){
+    public void agregarPaciente() {
 
         RegistroPacienteDTO registroPacienteDTO = new RegistroPacienteDTO(
                 "Karla Sanz",
@@ -34,18 +36,21 @@ public class PacienteTest {
                 "karlas@gmail.com",
                 "pass_prueba",
                 "url_foto",
-                LocalDate.of(2003,4,6),
+                LocalDate.of(2003, 4, 6),
                 Ciudad.BOGOTA,
                 1,
                 TipoSangre.B_POSITIVO,
                 "Rinitis"
         );
 
+        int codigoPaciente;
         try {
-            pacienteServicio.registrarse(registroPacienteDTO);
+            codigoPaciente = pacienteServicio.registrarse(registroPacienteDTO);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        Assertions.assertNotEquals(0, codigoPaciente);
     }
 
     @Test
@@ -60,28 +65,35 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        if(cargarDatosPaciente != null){
-            System.out.println(cargarDatosPaciente.toString());
-        }
+        Assertions.assertEquals("nancysalgado2369@gmail.com", cargarDatosPaciente.email());
     }
 
     @Test
     @Sql("classpath:dataset.sql")
-    public void actualizarPaciente(){
-        ActualizarPacienteDTO actualizarPacienteDTO = new ActualizarPacienteDTO(
-                "Karla Sanz",
-                "4321",
-                "3134697423",
-                "karlita@gmail.com",
-                "url_foto",
-                LocalDate.of(2003,4,6),
-                Ciudad.ARMENIA,
-                1,
-                TipoSangre.B_POSITIVO,
-                "Rinitis"
+    public void actualizarPaciente() throws Exception {
+
+        ActualizarPacienteDTO actualizarPacienteDTO = pacienteServicio.cargarDatosPaciente(1);
+
+        ActualizarPacienteDTO nuevo = new ActualizarPacienteDTO(
+                actualizarPacienteDTO.nombre(),
+                actualizarPacienteDTO.cedula(),
+                actualizarPacienteDTO.telefono(),
+                actualizarPacienteDTO.email(),
+                "otra foto",
+                actualizarPacienteDTO.fechaNacimiento(),
+                actualizarPacienteDTO.ciudad(),
+                actualizarPacienteDTO.eps(),
+                actualizarPacienteDTO.tipoSangre(),
+                actualizarPacienteDTO.alergias()
         );
+
         try {
-            pacienteServicio.editarPerfil(1,actualizarPacienteDTO);
+            pacienteServicio.editarPerfil(1, nuevo);
+
+            ActualizarPacienteDTO actualizado = pacienteServicio.cargarDatosPaciente(1);
+
+            Assertions.assertEquals("otra foto", actualizado.foto());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -144,7 +156,7 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-
+        Assertions.assertNotEquals(0, numRadicado);
     }
 
     @Test
@@ -159,6 +171,7 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
+        Assertions.assertEquals(1, listaPqrsPaciente.size());
 
     }
 
@@ -190,6 +203,7 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
+        Assertions.assertEquals(1, listaCitasPaciente.size());
 
     }
 
@@ -205,6 +219,8 @@ public class PacienteTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        Assertions.assertEquals(1, listaCitasPqrsPaciente.size());
 
     }
 
