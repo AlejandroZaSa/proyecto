@@ -13,4 +13,7 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
 
     @Query("select c from Consulta c where c.cita.medico.nombreCompleto = :nombreMedico or c.fecha = :fecha")
     List<Consulta> buscarConsulta(String nombreMedico, LocalDate fecha);
+
+    @Query("select c from Consulta c where c.cita.medico.nombreCompleto = :nombreMedico and c.fecha = :fecha")
+    List<Consulta> buscarConsulta2(String nombreMedico, LocalDate fecha);
 }

@@ -261,7 +261,7 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         emailServicio.enviarEmail(new EmailDTO("Agendamiento de Cita", medico.get().getEmail(), "Se ha agendado una cita con fecha " +
                 citaRegistrada.getFecha() + " y hora " + citaRegistrada.getHora() + " Motivo: "
-                + citaRegistrada.getMotivo()));
+                + citaRegistrada.getMotivo()+ "paciente"));
 
         return citaRegistrada.getId();
     }
@@ -281,7 +281,7 @@ public class PacienteServicioImpl implements PacienteServicio {
             throw new Exception("No existe la cita con el código " + pqrsPacienteDTO.codigoCita());
         }
 
-        List<Pqrs> pqrsList = pqrsRepository.findAllByCita_Paciente_IdAndEstadoPqrsEquals(opcional.get().getPaciente().getId(), EstadoPqrs.NUEVO);
+        List<Pqrs> pqrsList = pqrsRepository.findAllByCita_Paciente_IdAndEstadoPqrsOrEstadoPqrs(opcional.get().getPaciente().getId(), EstadoPqrs.NUEVO, EstadoPqrs.EN_PROCESO);
 
         if (pqrsList.size() >= 3) {
             throw new Exception("No se pueden crear más pqrs, máximo puedes tener 3 activas");
@@ -359,7 +359,7 @@ public class PacienteServicioImpl implements PacienteServicio {
 
             return respuestaPacienteRegistrada.getId();
         } else {
-            throw new Exception("No se puede responder a la pqrs");
+            throw new Exception("No se puede responder a la pqrs porque su estado es "+ opcionalPqrs.get().getEstadoPqrs());
         }
     }
 
@@ -405,10 +405,18 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public List<ItemConsultaPacienteDTO> buscarConsulta(String nombreMedico, LocalDate fecha, int idPaciente) throws Exception {
 
-        List<Consulta> consultas = consultaRepository.buscarConsulta(nombreMedico, fecha);
+        List<Consulta> consultas;
 
-        if (consultas.isEmpty()) {
-            throw new Exception("No tiene consultas");
+        if((nombreMedico==null && fecha!=null) || (nombreMedico!=null && fecha==null)){
+            consultas = consultaRepository.buscarConsulta(nombreMedico, fecha);
+        }else if(nombreMedico!=null && fecha!=null) {
+            consultas = consultaRepository.buscarConsulta2(nombreMedico, fecha);
+        }else{
+            throw new Exception("Selecciona el nombre del médico o una fecha");
+        }
+
+        if(consultas.isEmpty()){
+            throw new Exception("No tienes consultas");
         }
 
         List<ItemConsultaPacienteDTO> consultaPacienteDTOS = new ArrayList<>();

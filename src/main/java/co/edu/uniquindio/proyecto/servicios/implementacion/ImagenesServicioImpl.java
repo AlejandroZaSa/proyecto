@@ -14,23 +14,20 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-public class ImagenesServicioImpl  {
+public class ImagenesServicioImpl implements ImagenesServicio {
 
-   /** private final Cloudinary cloudinary;
+    private final Cloudinary cloudinary;
     public ImagenesServicioImpl(){
         Map<String, String> config = new HashMap<>();
         config.put("cloud_name", "dsia0fezi");
         config.put("api_key", "279487583872753");
-        config.put("api_secret", "***************************");
+        config.put("api_secret", "QyA8NZBmu9xrSOW0RqcGI0KeCfU");
         cloudinary = new Cloudinary(config);
     }
     @Override
     public Map subirImagen(MultipartFile imagen) throws Exception {
-    File file = convertir(imagen);
-
-    return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder",
-
-    "uniquindio/proyecto/fotos"));
+        File file = convertir(imagen);
+        return cloudinary.uploader().upload(file, ObjectUtils.asMap("folder", "proyecto"));
     }
     @Override
     public Map eliminarImagen(String idImagen) throws Exception{
@@ -42,5 +39,5 @@ public class ImagenesServicioImpl  {
         fos.write(imagen.getBytes());
         fos.close();
         return file;
-    }**/
+    }
 }

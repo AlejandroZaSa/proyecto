@@ -62,14 +62,19 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return medicoRegistrado.getId();
     }
 
-    private void registrarHorario(List<RegistroHorarioDTO> horarioDTOS, Medico medicoRegistrado) {
+    private void registrarHorario(List<RegistroHorarioDTO> horarioDTOS, Medico medicoRegistrado) throws Exception{
 
         for (RegistroHorarioDTO horario : horarioDTOS) {
             Horario horarioNuevo = new Horario();
             horarioNuevo.setMedico(medicoRegistrado);
             horarioNuevo.setDia(horario.dia());
-            horarioNuevo.setHoraInicio(horario.horaInicio());
-            horarioNuevo.setHoraFin(horario.horaFin());
+            if(horario.horaInicio().isBefore(horario.horaFin())){
+                horarioNuevo.setHoraInicio(horario.horaInicio());
+                horarioNuevo.setHoraFin(horario.horaFin());
+            }else{
+                throw new Exception("La hora de inicio no puede estar despues a la hora de fin");
+            }
+
             horarioRepository.save(horarioNuevo);
         }
     }
@@ -114,7 +119,8 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                 buscado.getEmail(),
                 buscado.getEspecialidad(),
                 buscado.getCostoConsulta(),
-                respuesta);
+                respuesta,
+                buscado.isEstado());
     }
 
     @Override
@@ -148,22 +154,41 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         List<Horario> horarios = horarioRepository.findAllByMedico_Id(buscado.getId());
 
-        //Se elimino un horario que antes tenia el medico
-        int posicion = 0;
-        for (Horario horario : horarios) {
-            if (horario.getId() == medico.horarioDTO().get(posicion).codigoHorario()) {
-                horario.setMedico(buscado);
-                horario.setDia(medico.horarioDTO().get(posicion).dia());
-                horario.setHoraInicio(medico.horarioDTO().get(posicion).horaInicio());
-                horario.setHoraFin(medico.horarioDTO().get(posicion).horaFin());
-                horarioRepository.save(horario);
-                posicion++;
-            } else {
-                horarioRepository.delete(horario);
-            }
+        for(ActualizarHorarioDTO hdto : medico.horarioDTO()){
+           if( hdto.codigoHorario() > 0 ){
+               if( actualizarHorario(horarios, hdto) ){
+                   Horario h = horarioRepository.findById(hdto.codigoHorario()).get();
+                   h.setDia(hdto.dia());
+                   h.setHoraInicio(hdto.horaInicio());
+                   h.setHoraFin(hdto.horaFin());
+                   horarioRepository.save(h);
+               }else{
+                   horarioRepository.deleteById(hdto.codigoHorario());
+               }
+           }else{
+               Horario h = new Horario();
+               h.setMedico(buscado);
+               h.setDia(hdto.dia());
+               h.setHoraInicio(hdto.horaInicio());
+               h.setHoraFin(hdto.horaFin());
+               horarioRepository.save(h);
+           }
         }
+
         return buscado.getId();
     }
+
+    public boolean actualizarHorario(List<Horario> horarios, ActualizarHorarioDTO nuevo){
+
+        for (Horario horario : horarios) {
+            if (horario.getId() == nuevo.codigoHorario()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     @Override
     public void eliminarMedico(int codigoMedico) throws Exception {
@@ -226,7 +251,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         if (opcionalPqrs.isEmpty()) {
             throw new Exception("No existe la pqrs con el codigo " + estadoPqrsDTO.codigoPqrs());
         }
-
         Pqrs buscado = opcionalPqrs.get();
 
         buscado.setEstadoPqrs(estadoPqrsDTO.estado());

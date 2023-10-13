@@ -33,7 +33,7 @@ public class MedicoServicioImpl implements MedicoServicio {
     @Override
     public List<ItemCitaMedicoDTO> listarCitasPendientes(int codigoMedico) throws Exception {
 
-        List<Cita> citasMedico = citaRepository.findAllByMedico_IdAndFechaAfterOrEqual(codigoMedico, LocalDate.now());
+        List<Cita> citasMedico = citaRepository.findAllByMedico_IdAndFechaGreaterThanEqual(codigoMedico, LocalDate.now());
 
         if(citasMedico.isEmpty()){
             throw new Exception("No tienes citas");
@@ -129,9 +129,9 @@ public class MedicoServicioImpl implements MedicoServicio {
             throw new Exception("El medico con código "+diaLibreDTO.codigoMedico()+" no existe");
         }
 
-        Optional<DiaLibre> diaLibre = diaLibreRepository.findByMedico_IdAndFechaAfterOrEqual(diaLibreDTO.codigoMedico(),LocalDate.now());
+        Optional<DiaLibre> diaLibre = diaLibreRepository.findByMedico_IdAndFechaGreaterThanEqual(diaLibreDTO.codigoMedico(),LocalDate.now());
 
-        if(!diaLibre.isEmpty()){
+        if(diaLibre.isPresent()){
             throw new Exception("Ya tiene un día libre activo con fecha "+diaLibre.get().getFecha());
         }
 

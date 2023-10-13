@@ -6,21 +6,25 @@ import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
 import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
 import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
 import co.edu.uniquindio.proyecto.servicios.interfaces.PacienteServicio;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
 @SpringBootTest
+@Transactional
 public class PacienteTest {
 
     @Autowired
     private PacienteServicio pacienteServicio;
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void agregarPaciente(){
 
         RegistroPacienteDTO registroPacienteDTO = new RegistroPacienteDTO(
@@ -45,6 +49,7 @@ public class PacienteTest {
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void cargarDatosPaciente(){
 
         ActualizarPacienteDTO cargarDatosPaciente;
@@ -61,6 +66,7 @@ public class PacienteTest {
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void actualizarPaciente(){
         ActualizarPacienteDTO actualizarPacienteDTO = new ActualizarPacienteDTO(
                 "Karla Sanz",
@@ -82,6 +88,7 @@ public class PacienteTest {
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void eliminarCuenta(){
 
         try {
@@ -92,6 +99,7 @@ public class PacienteTest {
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void filtrarMedicoCita() {
 
         List<ItemMedicoCitaDTO> medicoCitaDTOList;
@@ -101,13 +109,10 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        for (ItemMedicoCitaDTO itemMedicoCitaDTO :medicoCitaDTOList){
-            System.out.println(itemMedicoCitaDTO.toString());
-        }
-
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void agendarCita(){
 
         //lo de la hora es lo que selecciono de la tabla como lo represento acá
@@ -123,10 +128,11 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        System.out.println(codigoCita);
+
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void crearPqrs(){
         PQRSPacienteDTO pqrsPacienteDTO = new PQRSPacienteDTO(1, "Enfermedad");
 
@@ -138,10 +144,11 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        System.out.println(numRadicado);
+
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void listarPqrsPaciente(){
 
         List<ItemPqrsDTO> listaPqrsPaciente;
@@ -152,14 +159,11 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        if (listaPqrsPaciente != null){
-            for (ItemPqrsDTO itemPqrsDTO: listaPqrsPaciente){
-                System.out.println(itemPqrsDTO.toString());
-            }
-        }
+
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void responderPqrs(){
         RespuestaPacientePqrsDTO respuestaPacientePqrsDTO = new RespuestaPacientePqrsDTO(1, "Mensaje", 1,1);
 
@@ -171,10 +175,11 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        System.out.println(idRespuestaPaciente);
+
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void listarCitasPaciente(){
 
         List<ItemCitaPacienteDTO> listaCitasPaciente;
@@ -185,16 +190,14 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        if (listaCitasPaciente != null){
-            for (ItemCitaPacienteDTO itemCitaPacienteDTO: listaCitasPaciente){
-                System.out.println(itemCitaPacienteDTO.toString());
-            }
-        }
+
     }
 
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void listarCitasPqrsPaciente(){
+
         List<ItemCitaPqrsPacienteDTO> listaCitasPqrsPaciente;
 
         try {
@@ -203,14 +206,10 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        if (listaCitasPqrsPaciente != null){
-            for (ItemCitaPqrsPacienteDTO itemCitaPqrsPacienteDTO: listaCitasPqrsPaciente){
-                System.out.println(itemCitaPqrsPacienteDTO.toString());
-            }
-        }
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void buscarConsulta(){
         List<ItemConsultaPacienteDTO> listaConsultasPaciente;
 
@@ -220,11 +219,7 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        if (listaConsultasPaciente != null){
-            for (ItemConsultaPacienteDTO  itemConsultaPacienteDTO: listaConsultasPaciente){
-                System.out.println(listaConsultasPaciente.toString());
-            }
-        }
+
     }
 
 }

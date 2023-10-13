@@ -12,6 +12,5 @@ public interface PqrsRepository extends JpaRepository<Pqrs, Integer> {
 
     List<Pqrs> findAllByCita_Paciente_Id(int idPaciente);
 
-    List<Pqrs> findAllByCita_Paciente_IdAndEstadoPqrsEquals(int idPaciente, EstadoPqrs estadoPqrs);
-
+    List<Pqrs> findAllByCita_Paciente_IdAndEstadoPqrsOrEstadoPqrs(int idPaciente, EstadoPqrs estadoPqrs1, EstadoPqrs estadoPqrs2);
 }

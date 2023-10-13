@@ -12,19 +12,21 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
-//@Transactional
+@Transactional
 public class AdministradorTest {
 
     @Autowired
     private AdministradorServicio administradorServicio;
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void crearMedicoTest() {
 
         List<RegistroHorarioDTO> horarios = new ArrayList<>();
@@ -44,7 +46,7 @@ public class AdministradorTest {
         try {
             int codigoAdmin = administradorServicio.crearMedico(registroMedicoDTO);
 
-//            Assertions.assertEquals(1, codigoAdmin);
+            Assertions.assertNotEquals(0, codigoAdmin);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -52,50 +54,62 @@ public class AdministradorTest {
     }
 
     @Test
-    public void actualizarMedicoTest() {
-        List<ActualizarHorarioDTO> horarios = new ArrayList<>();
-        horarios.add(new ActualizarHorarioDTO(1,Dia.LUNES, LocalTime.of(7, 40, 0), LocalTime.of(8, 0, 0)));
+    @Sql("classpath:dataset.sql")
+    public void actualizarMedicoTest() throws Exception {
+        ActualizarMedicoDTO actualizarMedicoDTO = administradorServicio.obtenerMedico(1);
 
-        ActualizarMedicoDTO actualizarMedicoDTO = new ActualizarMedicoDTO("12345",
-                "alejandro salgado",
-                "foto_url",
-                Ciudad.ARMENIA,
-                "3102423689",
-                "az@gmail.com",
-                Especialidad.PEDIATRIA,
-                150000,
-                horarios);
+        ActualizarMedicoDTO nuevo = new ActualizarMedicoDTO(
+                actualizarMedicoDTO.cedula(),
+                actualizarMedicoDTO.nombre(),
+                "otra foto",
+                actualizarMedicoDTO.ciudad(),
+                actualizarMedicoDTO.telefono(),
+                actualizarMedicoDTO.email(),
+                actualizarMedicoDTO.especialidad(),
+                actualizarMedicoDTO.precioConsulta(),
+                actualizarMedicoDTO.horarioDTO(),
+                actualizarMedicoDTO.estado()
+        );
 
         try {
-            int codigoMedico = administradorServicio.actualizarMedico(1, actualizarMedicoDTO);
-            System.out.println(codigoMedico);
+            administradorServicio.actualizarMedico(1, nuevo);
+
+            ActualizarMedicoDTO actualizado = administradorServicio.obtenerMedico(1);
+
+            Assertions.assertEquals("otra foto", actualizado.foto());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
-    public void obtenerMedico(){
+    @Sql("classpath:dataset.sql")
+    public void obtenerMedico() {
 
-        ActualizarMedicoDTO actualizarMedicoDTO = null;
         try {
-            actualizarMedicoDTO = administradorServicio.obtenerMedico(1);
+            ActualizarMedicoDTO actualizarMedicoDTO = administradorServicio.obtenerMedico(1);
+            Assertions.assertEquals("Dr. Juan Perez", actualizarMedicoDTO.nombre());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        System.out.println(actualizarMedicoDTO.toString());
     }
 
     @Test
-    public void eliminarMedico(){
+    @Sql("classpath:dataset.sql")
+    public void eliminarMedico() {
         try {
             administradorServicio.eliminarMedico(1);
+
+            ActualizarMedicoDTO actualizarMedicoDTO = administradorServicio.obtenerMedico(1);
+            Assertions.assertFalse(actualizarMedicoDTO.estado());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void listarMedicos() {
         List<ItemMedicoDTO> listaMedicos;
         try {
@@ -104,72 +118,80 @@ public class AdministradorTest {
             throw new RuntimeException(e);
         }
 
-        for (ItemMedicoDTO itemMedicoDTO : listaMedicos) {
-            System.out.println(itemMedicoDTO.toString());
-        }
+        Assertions.assertEquals(5,listaMedicos.size());
     }
 
     @Test
-    public void listarPqrs(){
-        List<ItemPqrsDTO> listaPqrs = null;
+    @Sql("classpath:dataset.sql")
+    public void listarPqrs() {
+        List<ItemPqrsDTO> listaPqrs;
         try {
             listaPqrs = administradorServicio.listarPqrs();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        for(ItemPqrsDTO itemPqrsDTO : listaPqrs){
-            System.out.println(itemPqrsDTO.toString());
-        }
+
+        Assertions.assertEquals(5,listaPqrs.size());
     }
 
     @Test
-    public void cambiarEstadoPqrs(){
+    @Sql("classpath:dataset.sql")
+    public void cambiarEstadoPqrs() {
 
         EstadoPqrsDTO estadoPqrsDTO = new EstadoPqrsDTO(1, EstadoPqrs.EN_PROCESO);
 
         try {
             administradorServicio.cambiarEstadoPqrs(estadoPqrsDTO);
+
+            //Assertions.assertEquals(false, );
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
-    public void mostrarDetalleConsultaPqrs(){
+    @Sql("classpath:dataset.sql")
+    public void mostrarDetalleConsultaPqrs() {
 
         try {
             DetalleConsultaPqrsDTO detalleConsultaPqrsDTO = administradorServicio.mostrarDetalleConsultaPqrs(1);
-            System.out.println( detalleConsultaPqrsDTO.toString());
+
+            Assertions.assertEquals("Gripe comun", detalleConsultaPqrsDTO.diagnostico());
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
-    public void responderPqrs(){
+    @Sql("classpath:dataset.sql")
+    public void responderPqrs() {
 
-        RespuestaAdminPqrsDTO respuestaAdminPqrsDTO = new RespuestaAdminPqrsDTO(1,1,"Estamos tramitando su pqrs");
+        RespuestaAdminPqrsDTO respuestaAdminPqrsDTO = new RespuestaAdminPqrsDTO(1, 1, "Estamos tramitando su pqrs");
 
         try {
             int codigoRespuestaPqrs = administradorServicio.responderPqrs(respuestaAdminPqrsDTO);
-            System.out.println(codigoRespuestaPqrs);
+
+            Assertions.assertNotEquals(0, codigoRespuestaPqrs);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
-    public void listarCitas(){
-        List<ItemCitaAdminDTO> citaAdminDTOList = null;
+    @Sql("classpath:dataset.sql")
+    public void listarCitas() {
+        List<ItemCitaAdminDTO> citaAdminDTOList;
         try {
             citaAdminDTOList = administradorServicio.listarCitas();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        for(ItemCitaAdminDTO itemCitaAdminDTO : citaAdminDTOList){
-            System.out.println(itemCitaAdminDTO.toString());
-        }
+        Assertions.assertEquals(5,citaAdminDTOList.size());
+
     }
 }
 
