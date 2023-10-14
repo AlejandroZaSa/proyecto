@@ -17,7 +17,7 @@ public class EmailTest {
     public void enviarEmail() throws Exception{
         emailServicio.enviarEmail(new EmailDTO(
                 "Test",
-                "caflorez@uniquindio.edu.co",
+                "az0031456@gmail.com",
                 "<b>Saludo</b><br/><br/><p>Este es un mensaje de prueba</p>"
         ));
     }

@@ -25,4 +25,6 @@ public interface MedicoRepository extends JpaRepository<Medico, Integer> {
     List<Consulta> buscarConsultasMedico(int codigoMedico);
 
     Medico findByEmailAndContrasenia(String email, String password);
+
+    Medico findByEmail(String email);
 }

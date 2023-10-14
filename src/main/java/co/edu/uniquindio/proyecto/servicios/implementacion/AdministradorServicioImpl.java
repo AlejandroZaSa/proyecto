@@ -11,6 +11,7 @@ import co.edu.uniquindio.proyecto.servicios.interfaces.AdministradorServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.EmailServicio;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -53,7 +54,11 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         medicoNuevo.setEstado(true);
 
         medicoNuevo.setEmail(medicoDTO.email());
-        medicoNuevo.setContrasenia(medicoDTO.password());
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String passwordEncriptada = passwordEncoder.encode( medicoDTO.password() );
+
+        medicoNuevo.setContrasenia(passwordEncriptada);
 
         Medico medicoRegistrado = medicoRepository.save(medicoNuevo);
 
