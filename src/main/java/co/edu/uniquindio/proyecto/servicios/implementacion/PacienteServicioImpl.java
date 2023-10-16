@@ -12,6 +12,7 @@ import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.EmailServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.PacienteServicio;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -62,7 +63,10 @@ public class PacienteServicioImpl implements PacienteServicio {
         pacienteNuevo.setCiudad(pacienteDTO.ciudad());
         pacienteNuevo.setEstado(true);
 
-        pacienteNuevo.setContrasenia(pacienteDTO.password());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String passwordEncriptada = passwordEncoder.encode( pacienteDTO.password() );
+
+        pacienteNuevo.setContrasenia(passwordEncriptada);
         pacienteNuevo.setEmail(pacienteDTO.email());
 
         Paciente pacienteRegistrado = pacienteRepository.save(pacienteNuevo);

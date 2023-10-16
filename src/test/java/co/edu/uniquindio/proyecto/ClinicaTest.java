@@ -60,6 +60,11 @@ public class ClinicaTest {
     @Test
     public void cambiarPassword() {
 
+        try {
+            clinicaServicio.cambiarPassword(1,"1hello2");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
