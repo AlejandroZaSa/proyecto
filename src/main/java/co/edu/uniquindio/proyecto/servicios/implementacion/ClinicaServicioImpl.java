@@ -13,6 +13,7 @@ import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.EmailServicio;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -130,15 +131,27 @@ public class ClinicaServicioImpl implements ClinicaServicio {
 
         if(medico.isPresent()){
             Medico buscado = medico.get();
-            buscado.setContrasenia(nuevaPassword);
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String passwordEncriptada = passwordEncoder.encode( nuevaPassword );
+
+            buscado.setContrasenia(passwordEncriptada);
             medicoRepository.save(buscado);
         }else if(paciente.isPresent()){
             Paciente buscado = paciente.get();
-            buscado.setContrasenia(nuevaPassword);
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String passwordEncriptada = passwordEncoder.encode( nuevaPassword );
+
+            buscado.setContrasenia(passwordEncriptada);
             pacienteRepository.save(buscado);
         }else {
             Administrador buscado = admin.get();
-            buscado.setContrasenia(nuevaPassword);
+
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String passwordEncriptada = passwordEncoder.encode( nuevaPassword );
+
+            buscado.setContrasenia(passwordEncriptada);
             adminRepository.save(buscado);
         }
 

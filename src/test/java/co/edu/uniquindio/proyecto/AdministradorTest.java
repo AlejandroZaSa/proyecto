@@ -17,6 +17,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
 @Transactional
@@ -138,12 +139,15 @@ public class AdministradorTest {
     @Sql("classpath:dataset.sql")
     public void cambiarEstadoPqrs() {
 
-        EstadoPqrsDTO estadoPqrsDTO = new EstadoPqrsDTO(1, EstadoPqrs.EN_PROCESO);
-
         try {
-            administradorServicio.cambiarEstadoPqrs(estadoPqrsDTO);
+            administradorServicio.cambiarEstadoPqrs(new EstadoPqrsDTO(
+                    1,
+                    EstadoPqrs.ARCHIVADO
+            ));
 
-            //Assertions.assertEquals(false, );
+            Optional<ItemPqrsDTO> optional = administradorServicio.listarPqrs().stream().filter(p -> p.codigoRadicacion() == 1).findFirst();
+
+            Assertions.assertEquals(EstadoPqrs.ARCHIVADO, optional.get().estadoPqrs());
 
         } catch (Exception e) {
             throw new RuntimeException(e);

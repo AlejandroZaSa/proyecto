@@ -1,4 +1,4 @@
-INSERT INTO medico VALUES (1, 'password1', 'az0031456@gmail.com', '1234567890', 2, 1, 'foto1.jpg', 'Dr. Juan Perez', '1234567890', 100.00, 3);
+INSERT INTO medico VALUES (1, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'az0031456@gmail.com', '1234567890', 2, 1, 'foto1.jpg', 'Dr. Juan Perez', '1234567890', 100.00, 3);
 
 INSERT INTO medico VALUES (2, 'password2', 'medico2@example.com', '0987654321', 1, 0, 'foto2.jpg', 'Dra. María Rodríguez', '0987654321', 80.00, 5);
 
