@@ -1,12 +1,12 @@
 INSERT INTO medico VALUES (1, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'az0031456@gmail.com', '1234567890', 2, 1, 'foto1.jpg', 'Dr. Juan Perez', '1234567890', 100.00, 3);
 
-INSERT INTO medico VALUES (2, 'password2', 'medico2@example.com', '0987654321', 1, 0, 'foto2.jpg', 'Dra. María Rodríguez', '0987654321', 80.00, 5);
+INSERT INTO medico VALUES (2, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'medico2@example.com', '0987654321', 1, 0, 'foto2.jpg', 'Dra. María Rodríguez', '0987654321', 80.00, 5);
 
-INSERT INTO medico VALUES (3, 'password3', 'medico3@example.com', '5678901234', 3, 1, 'foto3.jpg', 'Dr. Pedro Gómez', '5678901234', 120.00, 7);
+INSERT INTO medico VALUES (3, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'medico3@example.com', '5678901234', 3, 1, 'foto3.jpg', 'Dr. Pedro Gómez', '5678901234', 120.00, 7);
 
-INSERT INTO medico VALUES (4, 'password4', 'medico4@example.com', '2345678901', 0, 0, 'foto4.jpg', 'Dra. Laura González', '2345678901', 90.00, 2);
+INSERT INTO medico VALUES (4, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'medico4@example.com', '2345678901', 0, 0, 'foto4.jpg', 'Dra. Laura Gonzalez', '2345678901', 90.00, 6);
 
-INSERT INTO medico VALUES (5, 'password5', 'alejandro.zapatas@uqvirtual.edu.co', '3456789012', 2, 1, 'foto5.jpg', 'Dr. Ana Lopez', '3456789012', 110.00, 4);
+INSERT INTO medico VALUES (5, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'alejandro.zapatas@uqvirtual.edu.co', '3456789012', 2, 1, 'foto5.jpg', 'Dr. Ana Lopez', '3456789012', 110.00, 6);
 
 INSERT INTO horario VALUES (1, 0, '08:00:00', '12:00:00', 1);
 
@@ -38,25 +38,25 @@ INSERT INTO eps VALUES (4, 'EPS D', 4.5);
 
 INSERT INTO eps VALUES (5, 'EPS E', 6.5);
 
-INSERT INTO administrador VALUES (1, 'password1', 'admin1@example.com');
+INSERT INTO administrador VALUES (1, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'admin1@example.com');
 
-INSERT INTO administrador VALUES (2, 'password2', 'admin2@example.com');
+INSERT INTO administrador VALUES (2, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'admin2@example.com');
 
-INSERT INTO administrador VALUES (3, 'password3', 'admin3@example.com');
+INSERT INTO administrador VALUES (3, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'admin3@example.com');
 
-INSERT INTO administrador VALUES (4, 'password4', 'admin4@example.com');
+INSERT INTO administrador VALUES (4, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'admin4@example.com');
 
-INSERT INTO administrador VALUES (5, 'password5', 'admin5@example.com');
+INSERT INTO administrador VALUES (5, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'admin5@example.com');
 
-INSERT INTO paciente VALUES (1, 'password1', 'nancysalgado2369@gmail.com', '1234567890', 2, 1, 'foto1.jpg', 'Juan Pérez', '1234567890', 'Ninguna', '1990-01-15', 3, 1);
+INSERT INTO paciente VALUES (1, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'nancysalgado2369@gmail.com', '1234567890', 2, 1, 'foto1.jpg', 'Juan Pérez', '1234567890', 'Ninguna', '1990-01-15', 3, 1);
 
-INSERT INTO paciente VALUES (2, 'password2', 'paciente2@example.com', '0987654321', 1, 1, 'foto2.jpg', 'María Rodríguez', '0987654321', 'Polen', '1985-03-20', 5, 2);
+INSERT INTO paciente VALUES (2, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'paciente2@example.com', '0987654321', 1, 1, 'foto2.jpg', 'María Rodríguez', '0987654321', 'Polen', '1985-03-20', 5, 2);
 
-INSERT INTO paciente VALUES (3, 'password3', 'paciente3@example.com', '5678901234', 3, 1, 'foto3.jpg', 'Pedro Gómez', '5678901234', 'Penicilina', '1995-07-10', 4, 1);
+INSERT INTO paciente VALUES (3, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'paciente3@example.com', '5678901234', 3, 1, 'foto3.jpg', 'Pedro Gómez', '5678901234', 'Penicilina', '1995-07-10', 4, 1);
 
-INSERT INTO paciente VALUES (4, 'password4', 'paciente4@example.com', '2345678901', 0, 1, 'foto4.jpg', 'Laura González', '2345678901', 'Ninguna', '1988-11-25', 2, 1);
+INSERT INTO paciente VALUES (4, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'paciente4@example.com', '2345678901', 0, 1, 'foto4.jpg', 'Laura González', '2345678901', 'Ninguna', '1988-11-25', 2, 1);
 
-INSERT INTO paciente VALUES (5, 'password5', 'paciente5@example.com', '3456789012', 2, 1, 'foto5.jpg', 'Ana López', '3456789012', 'Ninguna', '1992-05-30', 6, 3);
+INSERT INTO paciente VALUES (5, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'paciente5@example.com', '3456789012', 2, 1, 'foto5.jpg', 'Ana López', '3456789012', 'Ninguna', '1992-05-30', 6, 3);
 
 INSERT INTO cita VALUES (1, 2, '2023-10-06', '2023-10-05 09:00:00', '10:30:00', 'Consulta de rutina', 1, 1);
 

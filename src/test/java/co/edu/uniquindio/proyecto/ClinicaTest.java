@@ -58,6 +58,7 @@ public class ClinicaTest {
     }
 
     @Test
+    @Sql("classpath:dataset.sql")
     public void cambiarPassword() {
 
         try {

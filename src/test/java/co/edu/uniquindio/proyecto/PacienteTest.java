@@ -1,6 +1,5 @@
 package co.edu.uniquindio.proyecto;
 
-import co.edu.uniquindio.proyecto.dto.admin.ActualizarMedicoDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.dto.paciente.*;
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
@@ -116,19 +115,17 @@ public class PacienteTest {
 
         List<ItemMedicoCitaDTO> medicoCitaDTOList;
         try {
-            medicoCitaDTOList = pacienteServicio.filtrarMedicoCita(Especialidad.PEDIATRIA, LocalDate.of(2023, 10, 11));
+            medicoCitaDTOList = pacienteServicio.filtrarMedicoCita(Especialidad.PEDIATRIA, LocalDate.of(2023, 10, 20));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
+        Assertions.assertEquals(1,medicoCitaDTOList.size());
     }
 
     @Test
     @Sql("classpath:dataset.sql")
     public void agendarCita(){
-
-        //lo de la hora es lo que selecciono de la tabla como lo represento acá
-        //pacienteServicio.agendarCita(new CitaDTO("Migraña continua",LocalDate.of(2023,10,5),""));
 
         CitaDTO citaDTO = new CitaDTO("Enfermedad", LocalDate.of(2023,10,5), LocalTime.of(7,8,0),1,1);
 
@@ -140,6 +137,7 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
+        Assertions.assertNotEquals(0, codigoCita);
 
     }
 
@@ -180,14 +178,7 @@ public class PacienteTest {
     public void responderPqrs(){
         RespuestaPacientePqrsDTO respuestaPacientePqrsDTO = new RespuestaPacientePqrsDTO(1, "Mensaje", 1,1);
 
-        int idRespuestaPaciente;
-
-        try {
-            idRespuestaPaciente = pacienteServicio.responderPqrs(respuestaPacientePqrsDTO);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+        Assertions.assertThrows(Exception.class, () -> pacienteServicio.responderPqrs(respuestaPacientePqrsDTO));
 
     }
 
@@ -227,14 +218,8 @@ public class PacienteTest {
     @Test
     @Sql("classpath:dataset.sql")
     public void buscarConsulta(){
-        List<ItemConsultaPacienteDTO> listaConsultasPaciente;
 
-        try {
-            listaConsultasPaciente  = pacienteServicio.buscarConsulta(" NOMBREMEDICO !!!!!!!!!!", LocalDate.of(2023,10,5),1);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
+        Assertions.assertThrows(Exception.class, () -> pacienteServicio.buscarConsulta("Dra. Laura Gonzalez", LocalDate.of(2023,10,5),1));
 
     }
 

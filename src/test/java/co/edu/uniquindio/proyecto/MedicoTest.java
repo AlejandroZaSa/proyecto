@@ -53,7 +53,7 @@ public class MedicoTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        //PREGUNTAR SI HAY QUE VALIDAR EN ATENCION DE LA CITA QUE LA HORA TAMBIEN SEA IGUAL O MAYOR
+
         Assertions.assertNotEquals(0, codigoConsulta);
     }
 
