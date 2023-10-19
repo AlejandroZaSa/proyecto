@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public record RegistroTratamientoDTO(int dosis,
 
-                                     int codigConsulta,
                                      @NotBlank
                                      String observaciones,
 

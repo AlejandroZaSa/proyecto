@@ -34,5 +34,7 @@ public record ActualizarPacienteDTO(
         @NotNull
         TipoSangre tipoSangre,
         @NotBlank
-        String alergias) {
+        String alergias,
+
+        boolean estado) {
 }

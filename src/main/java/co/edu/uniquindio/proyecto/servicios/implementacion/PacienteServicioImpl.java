@@ -107,7 +107,8 @@ public class PacienteServicioImpl implements PacienteServicio {
                 buscado.getCiudad(),
                 buscado.getEps().getId(),
                 buscado.getTipoSangre(),
-                buscado.getAlergias()
+                buscado.getAlergias(),
+                buscado.isEstado()
         );
     }
 

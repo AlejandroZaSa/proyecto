@@ -158,39 +158,6 @@ public class ClinicaServicioImpl implements ClinicaServicio {
             buscado.setContrasenia(passwordEncriptada);
             medicoRepository.save(buscado);
         }
-
-        /**Optional<Paciente> paciente = pacienteRepository.findById(codigoUsuario);
-        Optional<Administrador> admin = adminRepository.findById(codigoUsuario);
-
-        if(medico.isEmpty() && paciente.isEmpty() && admin.isEmpty()){
-            throw new Exception("El usuario con el código "+codigoUsuario+" no existe");
-        }
-        if(medico.isPresent()){
-            Medico buscado = medico.get();
-
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String passwordEncriptada = passwordEncoder.encode( nuevaPassword );
-
-            buscado.setContrasenia(passwordEncriptada);
-            medicoRepository.save(buscado);
-        }else if(paciente.isPresent()){
-            Paciente buscado = paciente.get();
-
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String passwordEncriptada = passwordEncoder.encode( nuevaPassword );
-
-            buscado.setContrasenia(passwordEncriptada);
-            pacienteRepository.save(buscado);
-        }else {
-            Administrador buscado = admin.get();
-
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String passwordEncriptada = passwordEncoder.encode( nuevaPassword );
-
-            buscado.setContrasenia(passwordEncriptada);
-            adminRepository.save(buscado);
-        }**/
-
     }
 
     @Override

@@ -1,10 +1,11 @@
 package co.edu.uniquindio.proyecto;
 
-import co.edu.uniquindio.proyecto.dto.admin.ItemCitaAdminDTO;
+import co.edu.uniquindio.proyecto.dto.autenticacionJwt.TokenDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.EpsDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
+import co.edu.uniquindio.proyecto.dto.clinica.LoginDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.MensajeDTO;
-import co.edu.uniquindio.proyecto.modelo.entidades.Tratamiento;
+import co.edu.uniquindio.proyecto.servicios.interfaces.AutenticacionServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
@@ -21,6 +22,8 @@ public class ClinicaTest {
 
     @Autowired
     private ClinicaServicio  clinicaServicio;
+    @Autowired
+    private AutenticacionServicio autenticacionServicio;
 
     @Test
     @Sql("classpath:dataset.sql")
@@ -63,9 +66,15 @@ public class ClinicaTest {
 
         try {
             clinicaServicio.cambiarPassword(1,"1hello2");
+            TokenDTO tokenDTO = autenticacionServicio.login(new LoginDTO("az0031456@gmail.com","1hello2"));
+            Assertions.assertNotNull(tokenDTO);
+            System.out.println(tokenDTO);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+
     }
 
     @Test

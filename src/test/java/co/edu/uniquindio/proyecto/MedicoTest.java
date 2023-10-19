@@ -42,11 +42,11 @@ public class MedicoTest {
     public void atenderCita(){
 
         List<RegistroTratamientoDTO> registroTratamientoDTOList = new ArrayList<>();
-        registroTratamientoDTOList.add(new RegistroTratamientoDTO(3,1, "Tomar 1 cada 8 horas", Medicamento.ASPIRINA));
+        registroTratamientoDTOList.add(new RegistroTratamientoDTO(3,"Tomar 1 cada 8 horas", Medicamento.ASPIRINA));
 
         int codigoConsulta;
 
-        AtencionMedicoDTO atencionMedicoDTO = new AtencionMedicoDTO(6,"Mareos", "Presión alta", "El paciente debe tomar 20 minutos de descanso cada 3 horas", registroTratamientoDTOList);
+        AtencionMedicoDTO atencionMedicoDTO = new AtencionMedicoDTO(7,"Mareos", "Presión alta", "El paciente debe tomar 20 minutos de descanso cada 3 horas", registroTratamientoDTOList);
 
         try {
             codigoConsulta = medicoServicio.atenderCita(atencionMedicoDTO);

@@ -83,7 +83,8 @@ public class PacienteTest {
                 actualizarPacienteDTO.ciudad(),
                 actualizarPacienteDTO.eps(),
                 actualizarPacienteDTO.tipoSangre(),
-                actualizarPacienteDTO.alergias()
+                actualizarPacienteDTO.alergias(),
+                actualizarPacienteDTO.estado()
         );
 
         try {
@@ -100,13 +101,19 @@ public class PacienteTest {
 
     @Test
     @Sql("classpath:dataset.sql")
-    public void eliminarCuenta(){
+    public void eliminarCuenta() {
 
+        ActualizarPacienteDTO actualizarPacienteDTO;
         try {
             pacienteServicio.eliminarCuenta(1);
+
+            actualizarPacienteDTO = pacienteServicio.cargarDatosPaciente(1);
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        Assertions.assertEquals(false, actualizarPacienteDTO.estado());
     }
 
     @Test

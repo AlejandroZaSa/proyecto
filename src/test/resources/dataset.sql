@@ -72,6 +72,8 @@ INSERT INTO cita VALUES (5, 0, '2023-11-20', '2023-10-28 16:00:00', '16:45:00', 
 
 INSERT INTO cita VALUES (6, 0, '2023-10-12', '2023-10-10 08:30:00', '09:45:00', 'Vacunación', 1, 5);
 
+INSERT INTO cita VALUES (7, 0, '2023-10-19', '2023-10-12 08:30:00', '09:45:00', 'Vacunación', 1, 1);
+
 INSERT INTO consulta VALUES (1, 'Gripe comun', '2023-10-06', 'Descanso y tomar líquidos', 'Fiebre, dolor de garganta', 1);
 
 INSERT INTO consulta VALUES (2, 'Dolor de cabeza', '2023-10-06', 'Recetado analgésicos', 'Dolor en la sien', 2);
