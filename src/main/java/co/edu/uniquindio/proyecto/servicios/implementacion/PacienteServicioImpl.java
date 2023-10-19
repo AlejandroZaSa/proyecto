@@ -265,7 +265,7 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         emailServicio.enviarEmail(new EmailDTO("Agendamiento de Cita", medico.get().getEmail(), "Se ha agendado una cita con fecha " +
                 citaRegistrada.getFecha() + " y hora " + citaRegistrada.getHora() + " Motivo: "
-                + citaRegistrada.getMotivo()+ "paciente"));
+                + citaRegistrada.getMotivo()+ " Nombre del Paciente: "+ paciente.get().getNombreCompleto()));
 
         return citaRegistrada.getId();
     }

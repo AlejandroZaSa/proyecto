@@ -120,7 +120,7 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        Assertions.assertEquals(1,medicoCitaDTOList.size());
+        Assertions.assertEquals(4,medicoCitaDTOList.size());
     }
 
     @Test

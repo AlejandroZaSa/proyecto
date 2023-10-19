@@ -6,7 +6,7 @@ INSERT INTO medico VALUES (3, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2Vn
 
 INSERT INTO medico VALUES (4, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'medico4@example.com', '2345678901', 0, 0, 'foto4.jpg', 'Dra. Laura Gonzalez', '2345678901', 90.00, 6);
 
-INSERT INTO medico VALUES (5, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'alejandro.zapatas@uqvirtual.edu.co', '3456789012', 2, 1, 'foto5.jpg', 'Dr. Ana Lopez', '3456789012', 110.00, 6);
+INSERT INTO medico VALUES (5, '$2a$10$dFaQTMpf5D93w9Y2XLOHuuEkGnqDGglhUtoUv0z2VnnyxWV4q2/xK', 'alejandro.zapatas@uqvirtual.edu.co', '3456789012', 2, 1, 'foto5.jpg', 'Dr. Ana Lopez', '3456789012', 110.00, 1);
 
 INSERT INTO horario VALUES (1, 0, '08:00:00', '12:00:00', 1);
 
@@ -17,6 +17,8 @@ INSERT INTO horario VALUES (3, 2, '10:00:00', '13:30:00', 3);
 INSERT INTO horario VALUES (4, 3, '13:00:00', '17:00:00', 1);
 
 INSERT INTO horario VALUES (5, 4, '14:30:00', '18:30:00', 2);
+
+INSERT INTO horario VALUES (6, 4, '18:30:00', '16:30:00', 4);
 
 INSERT INTO dia_libre VALUES (1, '2023-10-10', 1);
 
