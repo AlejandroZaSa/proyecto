@@ -33,6 +33,7 @@ public record RegistroPacienteDTO(
         LocalDate fechaNacimiento,
         @NotNull
         Ciudad ciudad,
+        @Positive
         int eps,
         @NotNull
         TipoSangre tipoSangre,

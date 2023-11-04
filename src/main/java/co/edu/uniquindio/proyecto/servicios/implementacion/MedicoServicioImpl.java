@@ -27,7 +27,6 @@ public class MedicoServicioImpl implements MedicoServicio {
     private final ConsultaRepository consultaRepository;
     private final TratamientoRepository tratamientoRepository;
     private final FacturaRepository facturaRepository;
-    private final PacienteRepository pacienteRepository;
     private final EmailServicio emailServicio;
 
     @Override
@@ -98,7 +97,7 @@ public class MedicoServicioImpl implements MedicoServicio {
     @Override
     public List<ItemConsultaMedicoPacienteDTO> listarCitaPaciente(int codigoPaciente) throws Exception {
 
-        List<Consulta> consultasPaciente = pacienteRepository.buscarConsultasPaciente(codigoPaciente);
+        List<Consulta> consultasPaciente = consultaRepository.buscarConsultasPaciente(codigoPaciente);
 
         if(consultasPaciente.isEmpty()){
             throw new Exception("El paciente no tiene consultas");
@@ -153,11 +152,10 @@ public class MedicoServicioImpl implements MedicoServicio {
         return diaLibreRegistrado.getId();
     }
 
-
     @Override
     public List<ItemConsultaMedicoPacienteDTO> listarCitasRealizadasMedico(int codigoMedico) throws Exception {
 
-        List<Consulta> consultasMedico = medicoRepository.buscarConsultasMedico(codigoMedico);
+        List<Consulta> consultasMedico = consultaRepository.buscarConsultasMedico(codigoMedico);
 
         if(consultasMedico.isEmpty()){
             throw new Exception("No hay consultas");

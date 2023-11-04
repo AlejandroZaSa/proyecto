@@ -17,11 +17,11 @@ public interface PacienteServicio {
 
     void eliminarCuenta(int id) throws Exception;
 
-    List<ItemMedicoCitaDTO> filtrarMedicoCita(Especialidad especialidad, LocalDate fecha) throws Exception;
+    List<ItemMedicoCitaDTO> filtrarMedicoCita(FiltroCitaDTO citaDTO) throws Exception;
 
     int agendarCita(CitaDTO citaDTO) throws Exception;
 
-    int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO) throws Exception;
+    int crearPqrs(String autenticacion, PQRSPacienteDTO pqrsPacienteDTO) throws Exception;
 
     List<ItemPqrsDTO> listarPqrsPaciente(int idPaciente) throws Exception;
 
@@ -31,5 +31,6 @@ public interface PacienteServicio {
 
     List<ItemCitaPqrsPacienteDTO> listarCitasPqrsPaciente(int idPaciente) throws Exception;
 
-    List<ItemConsultaPacienteDTO> buscarConsulta(String nombreMedico, LocalDate fecha, int idPaciente) throws Exception;
+    List<ItemConsultaPacienteDTO> buscarConsulta(BusquedaConsultaDTO busquedaConsultaDTO) throws Exception;
+
 }

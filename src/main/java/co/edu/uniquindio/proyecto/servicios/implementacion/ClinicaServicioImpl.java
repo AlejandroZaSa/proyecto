@@ -1,9 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.implementacion;
 
-import co.edu.uniquindio.proyecto.dto.clinica.EmailDTO;
-import co.edu.uniquindio.proyecto.dto.clinica.EpsDTO;
-import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
-import co.edu.uniquindio.proyecto.dto.clinica.MensajeDTO;
+import co.edu.uniquindio.proyecto.dto.clinica.*;
 import co.edu.uniquindio.proyecto.modelo.entidades.*;
 import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
@@ -113,50 +110,48 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     @Override
     public void enviarLinkRecuperacion(String email) throws Exception {
 
-        emailServicio.enviarEmail(new EmailDTO("Recupera tu cuenta", email, "link"));
+        String parametroEmail = Base64.getEncoder().encodeToString(email.getBytes());
+
+        emailServicio.enviarEmail(new EmailDTO("Recupera tu cuenta", email, "http:/xxxxx/"+parametroEmail));
 
 
     }
 
     @Override
-    public void cambiarPassword(int codigoUsuario, String nuevaPassword) throws Exception {
+    public void cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception {
 
-        Optional<Medico> medico = medicoRepository.findById(codigoUsuario);
+        Medico medico = medicoRepository.findByEmail(cambioPasswordDTO.email());
 
-        if(medico.isEmpty()){
-            Optional<Paciente> paciente = pacienteRepository.findById(codigoUsuario);
+        if(medico==null){
+            Paciente paciente = pacienteRepository.findByEmail(cambioPasswordDTO.email());
 
-            if(paciente.isEmpty()){
-                Optional<Administrador> admin = adminRepository.findById(codigoUsuario);
+            if(paciente==null){
+                Administrador admin = adminRepository.findByEmail(cambioPasswordDTO.email());
 
-                if(admin.isEmpty()){
-                    throw new Exception("El usuario con el código "+codigoUsuario+" no existe");
+                if(admin==null){
+                    throw new Exception("El usuario con el email "+cambioPasswordDTO.email()+" no existe");
                 }else{
-                    Administrador buscado = admin.get();
-
                     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                    String passwordEncriptada = passwordEncoder.encode( nuevaPassword );
+                    String passwordEncriptada = passwordEncoder.encode(cambioPasswordDTO.nuevaPassword() );
 
-                    buscado.setContrasenia(passwordEncriptada);
-                    adminRepository.save(buscado);
+                    admin.setContrasenia(passwordEncriptada);
+                    adminRepository.save(admin);
                 }
             }else{
-                Paciente buscado = paciente.get();
 
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String passwordEncriptada = passwordEncoder.encode( nuevaPassword );
+                String passwordEncriptada = passwordEncoder.encode(cambioPasswordDTO.nuevaPassword() );
 
-                buscado.setContrasenia(passwordEncriptada);
-                pacienteRepository.save(buscado);
+                paciente.setContrasenia(passwordEncriptada);
+                pacienteRepository.save(paciente);
             }
         }else{
-            Medico buscado = medico.get();
 
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String passwordEncriptada = passwordEncoder.encode( nuevaPassword );
+            String passwordEncriptada = passwordEncoder.encode(cambioPasswordDTO.nuevaPassword() );
 
-            buscado.setContrasenia(passwordEncriptada);
-            medicoRepository.save(buscado);
+            medico.setContrasenia(passwordEncriptada);
+            medicoRepository.save(medico);
         }
     }
 

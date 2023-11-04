@@ -1,5 +1,6 @@
 package co.edu.uniquindio.proyecto.servicios.interfaces;
 
+import co.edu.uniquindio.proyecto.dto.clinica.CambioPasswordDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.EpsDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.MensajeDTO;
@@ -26,7 +27,7 @@ public interface ClinicaServicio {
 
     void enviarLinkRecuperacion(String email) throws Exception;
 
-    void cambiarPassword(int codigoUsuario, String nuevaPassword) throws Exception;
+    void cambiarPassword(CambioPasswordDTO cambioPasswordDTO) throws Exception;
 
     List<ItemTratamientoDTO> verTratamiento(int codigoConsulta) throws Exception;
 

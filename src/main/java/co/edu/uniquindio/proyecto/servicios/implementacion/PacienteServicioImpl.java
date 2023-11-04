@@ -5,20 +5,20 @@ import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.dto.paciente.*;
 import co.edu.uniquindio.proyecto.modelo.entidades.*;
 import co.edu.uniquindio.proyecto.modelo.enums.Dia;
-import co.edu.uniquindio.proyecto.modelo.enums.Especialidad;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoCita;
 import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.EmailServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.PacienteServicio;
+import co.edu.uniquindio.proyecto.utils.JWTUtils;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +39,7 @@ public class PacienteServicioImpl implements PacienteServicio {
     private final HorarioRepository horarioRepository;
     private final EmailServicio emailServicio;
     private final AdminRepository adminRepository;
+    private final JWTUtils jwtUtils;
 
     @Override
     public int registrarse(RegistroPacienteDTO pacienteDTO) throws Exception {
@@ -79,7 +80,8 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     private boolean estaRepetidoCorreo(String email) {
-        return pacienteRepository.buscarPorCorreo(email) != null;
+        return medicoRepository.buscarPorCorreo(email) != null || adminRepository.findByEmail(email) != null || pacienteRepository.buscarPorCorreo(email) != null;
+
     }
 
     private boolean estaRepetidaCedula(String cedula) {
@@ -163,16 +165,19 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public List<ItemMedicoCitaDTO> filtrarMedicoCita(Especialidad especialidad, LocalDate fecha) throws Exception {
-        List<Medico> medicosEspecializados = medicoRepository.obtenerMedicoEspecialidad(especialidad);
+    public List<ItemMedicoCitaDTO> filtrarMedicoCita(FiltroCitaDTO citaDTO) throws Exception {
+
+        //Filtramos los médicos especializados y que estén activos
+
+        List<Medico> medicosEspecializados = medicoRepository.obtenerMedicoEspecialidad(citaDTO.especialidad());
 
         if (medicosEspecializados.isEmpty()) {
-            throw new Exception("No hay médicos con la Especialidad "+ especialidad);
+            throw new Exception("No hay médicos con la Especialidad "+ citaDTO.especialidad());
         }
 
-        //____________________________Vemos qué día se quiere la cita____________________________
+        //____________________________Vemos para qué día se quiere la cita____________________________
         //Obtenemos el día de la semana
-        DayOfWeek diaDeLaSemana = fecha.getDayOfWeek();
+        DayOfWeek diaDeLaSemana = citaDTO.fecha().getDayOfWeek();
 
         int numeroDia = diaDeLaSemana.getValue() - 1;
         //Obtenemos el enumerable
@@ -183,7 +188,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         List<Medico> medicosDisponibles = new ArrayList<>();
         //Validamos que el médico no tenga día libre ese día
         for (Medico medico : medicosEspecializados) {
-            if (diaLibreRepository.obtenerDiaLibreFecha(medico.getId(), fecha) == null) {
+            if (diaLibreRepository.obtenerDiaLibreFecha(medico.getId(), citaDTO.fecha()) == null) {
                 //Si no tiene día libre en esa fecha lo agregamos a los posibles disponibles
                 medicosDisponibles.add(medico);
             }
@@ -195,35 +200,56 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         for (Medico medico : medicosDisponibles) {
             Horario horarioMedico = horarioRepository.obtenerHorarioFecha(medico.getId(), dia);
-            List<Cita> citasPendientes = citaRepository.obtenerCitasFecha(medico.getId(), fecha);
 
-            //Empezamos con la primera hora de trabajo del medico
-            LocalTime horaInicioCita = horarioMedico.getHoraInicio();
-            LocalTime finJornada = horarioMedico.getHoraFin();
+            if (horarioMedico != null) {
 
-            /*
-             * Mientras que el posible inicio de la cita sea diferente al fin de la jornada
-             * Se evalua como posible inicio de una nueva cita
-             * */
-            while (!horaInicioCita.equals(finJornada)) {
+                List<Cita> citasPendientes = citaRepository.obtenerCitasFecha(medico.getId(), citaDTO.fecha());
 
-                boolean sePuedeAgendar = true;
-                //Validamos que ninguna cita cumpla con esa hora
-                for (Cita cita : citasPendientes) {
-                    if (horaInicioCita.equals(cita.getHora())) {
-                        sePuedeAgendar = false;
-                        break;
+                //Empezamos con la primera hora de trabajo del medico
+                LocalTime horaInicioCita = horarioMedico.getHoraInicio();
+                LocalTime finJornada = horarioMedico.getHoraFin();
+
+                /*
+                 * Mientras que el posible inicio de la cita sea diferente al fin de la jornada
+                 * Se evalua como posible inicio de una nueva cita
+                 * */
+
+                while (!horaInicioCita.equals(finJornada) && horaInicioCita.isBefore(finJornada) && verificarHoras(horaInicioCita,finJornada)) {
+
+                    boolean sePuedeAgendar = true;
+                    //Validamos que ninguna cita cumpla con esa hora
+                    for (Cita cita : citasPendientes) {
+                        if (horaInicioCita.equals(cita.getHora())) {
+                            sePuedeAgendar = false;
+                            break;
+                        }
                     }
+                    if (sePuedeAgendar) {
+                        listaItemMedicoCitaDTOS.add(new ItemMedicoCitaDTO(medico.getId(), medico.getNombreCompleto(), horaInicioCita));
+                    }
+                    //Sumamos 30 minutos que es la duración de una cita
+                    horaInicioCita = horaInicioCita.plusMinutes(30);
                 }
-                if (sePuedeAgendar) {
-                    listaItemMedicoCitaDTOS.add(new ItemMedicoCitaDTO(medico.getId(), medico.getNombreCompleto(), horaInicioCita));
-                }
-                //Sumamos 30 minutos que es la duración de una cita
-                horaInicioCita = horaInicioCita.plusMinutes(30);
+
             }
+
         }
         //________________________________________________________________________________________
         return listaItemMedicoCitaDTOS;
+    }
+
+    private boolean verificarHoras(LocalTime horaInicioCita, LocalTime finJornada) {
+
+        Duration diferencia = Duration.between(finJornada, horaInicioCita);
+
+        // Obtener la diferencia en minutos
+        long minutosDiferencia = Math.abs(diferencia.toMinutes());
+
+        if(minutosDiferencia>=30){
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -272,7 +298,15 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO) throws Exception {
+    public int crearPqrs(String autenticacion, PQRSPacienteDTO pqrsPacienteDTO) throws Exception {
+
+        int codigoToken = 0;
+
+        if(autenticacion!=null){
+            Jws<Claims> jwts = jwtUtils.parseJwt(autenticacion.replace("Bearer ", ""));
+            codigoToken = Integer.parseInt( jwts.getBody().get("id").toString() );
+
+        }
 
         List<Administrador> administradorList = adminRepository.findAll();
 
@@ -284,6 +318,10 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         if (opcional.isEmpty()) {
             throw new Exception("No existe la cita con el código " + pqrsPacienteDTO.codigoCita());
+        }
+
+        if( opcional.get().getPaciente().getId() != codigoToken ){
+            throw new Exception("No se puede crear el PQRS ");
         }
 
         List<Pqrs> pqrsList = pqrsRepository.findAllByCita_Paciente_IdAndEstadoPqrsOrEstadoPqrs(opcional.get().getPaciente().getId(), EstadoPqrs.NUEVO, EstadoPqrs.EN_PROCESO);
@@ -408,14 +446,14 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public List<ItemConsultaPacienteDTO> buscarConsulta(String nombreMedico, LocalDate fecha, int idPaciente) throws Exception {
+    public List<ItemConsultaPacienteDTO> buscarConsulta(BusquedaConsultaDTO busquedaConsultaDTO) throws Exception {
 
         List<Consulta> consultas;
 
-        if((nombreMedico==null && fecha!=null) || (nombreMedico!=null && fecha==null)){
-            consultas = consultaRepository.buscarConsulta(nombreMedico, fecha);
-        }else if(nombreMedico!=null && fecha!=null) {
-            consultas = consultaRepository.buscarConsulta2(nombreMedico, fecha);
+        if((busquedaConsultaDTO.nombreMedico()==null && busquedaConsultaDTO.fecha()!=null) || (busquedaConsultaDTO.nombreMedico()!=null && busquedaConsultaDTO.fecha()==null)){
+            consultas = consultaRepository.buscarConsulta(busquedaConsultaDTO.nombreMedico(), busquedaConsultaDTO.fecha(), busquedaConsultaDTO.idPaciente());
+        }else if(busquedaConsultaDTO.nombreMedico()!=null && busquedaConsultaDTO.fecha()!=null) {
+            consultas = consultaRepository.buscarConsulta2(busquedaConsultaDTO.nombreMedico(), busquedaConsultaDTO.fecha(), busquedaConsultaDTO.idPaciente());
         }else{
             throw new Exception("Selecciona el nombre del médico o una fecha");
         }

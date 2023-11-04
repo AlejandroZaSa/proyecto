@@ -194,7 +194,7 @@ public class AdministradorTest {
             throw new RuntimeException(e);
         }
 
-        Assertions.assertEquals(5,citaAdminDTOList.size());
+        Assertions.assertEquals(7,citaAdminDTOList.size());
 
     }
 }

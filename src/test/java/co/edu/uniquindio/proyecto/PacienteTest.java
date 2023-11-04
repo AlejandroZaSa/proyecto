@@ -113,7 +113,7 @@ public class PacienteTest {
             throw new RuntimeException(e);
         }
 
-        Assertions.assertEquals(false, actualizarPacienteDTO.estado());
+        Assertions.assertFalse(actualizarPacienteDTO.estado());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class PacienteTest {
 
         List<ItemMedicoCitaDTO> medicoCitaDTOList;
         try {
-            medicoCitaDTOList = pacienteServicio.filtrarMedicoCita(Especialidad.PEDIATRIA, LocalDate.of(2023, 10, 20));
+            medicoCitaDTOList = pacienteServicio.filtrarMedicoCita(new FiltroCitaDTO(Especialidad.PEDIATRIA, LocalDate.of(2023, 10, 20)));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -226,7 +226,7 @@ public class PacienteTest {
     @Sql("classpath:dataset.sql")
     public void buscarConsulta(){
 
-        Assertions.assertThrows(Exception.class, () -> pacienteServicio.buscarConsulta("Dra. Laura Gonzalez", LocalDate.of(2023,10,5),1));
+        Assertions.assertThrows(Exception.class, () -> pacienteServicio.buscarConsulta(new BusquedaConsultaDTO("Dra. Laura Gonzalez", LocalDate.of(2023,10,5),1)));
 
     }
 

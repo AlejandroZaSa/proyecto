@@ -77,22 +77,26 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
                     rol = "admin";
                 }
 
-            }else{
+            }else if(paciente.isEstado()){
 
                 correo = paciente.getEmail();
                 nombre = paciente.getNombreCompleto();
                 codigo = paciente.getId();
                 password = paciente.getContrasenia();
-                rol = "pacienta";
+                rol = "paciente";
+            }else{
+                throw new Exception("Estás inactivo");
             }
 
-        }else{
+        }else if(medico.isEstado()){
 
             correo = medico.getEmail();
             nombre = medico.getNombreCompleto();
             codigo = medico.getId();
             password = medico.getContrasenia();
             rol = "medico";
+        }else{
+            throw new Exception("Estás inactivo");
         }
 
         return new Object[]{correo, nombre, codigo, password, rol };

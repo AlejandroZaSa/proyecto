@@ -28,6 +28,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final PqrsRepository pqrsRepository;
     private final RespuestaAdminRepository respuestaAdminRepository;
     private final AdminRepository adminRepository;
+    private final PacienteRepository pacienteRepository;
     private final ConsultaRepository consultaRepository;
     private final ClinicaServicio clinicaServicio;
     private final EmailServicio emailServicio;
@@ -85,7 +86,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     private boolean estaRepetidoCorreo(String email) {
-        return medicoRepository.buscarPorCorreo(email) != null;
+        return medicoRepository.buscarPorCorreo(email) != null || adminRepository.findByEmail(email) != null || pacienteRepository.buscarPorCorreo(email) != null;
     }
 
     private boolean estaRepetidaCedula(String cedula) {
