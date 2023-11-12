@@ -167,6 +167,10 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public List<ItemMedicoCitaDTO> filtrarMedicoCita(FiltroCitaDTO citaDTO) throws Exception {
 
+        if(citaDTO.fecha().isBefore(LocalDate.now())){
+            throw new Exception("La fecha es anterior a hoy");
+        }
+
         //Filtramos los médicos especializados y que estén activos
 
         List<Medico> medicosEspecializados = medicoRepository.obtenerMedicoEspecialidad(citaDTO.especialidad());
@@ -235,6 +239,10 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         }
         //________________________________________________________________________________________
+        if(listaItemMedicoCitaDTOS.isEmpty()){
+            throw new Exception("No hay disponibilidad de médicos, inténtalo más tarde");
+        }
+
         return listaItemMedicoCitaDTOS;
     }
 
@@ -298,15 +306,7 @@ public class PacienteServicioImpl implements PacienteServicio {
     }
 
     @Override
-    public int crearPqrs(String autenticacion, PQRSPacienteDTO pqrsPacienteDTO) throws Exception {
-
-        int codigoToken = 0;
-
-        if(autenticacion!=null){
-            Jws<Claims> jwts = jwtUtils.parseJwt(autenticacion.replace("Bearer ", ""));
-            codigoToken = Integer.parseInt( jwts.getBody().get("id").toString() );
-
-        }
+    public int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO) throws Exception {
 
         List<Administrador> administradorList = adminRepository.findAll();
 
@@ -318,10 +318,6 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         if (opcional.isEmpty()) {
             throw new Exception("No existe la cita con el código " + pqrsPacienteDTO.codigoCita());
-        }
-
-        if( opcional.get().getPaciente().getId() != codigoToken ){
-            throw new Exception("No se puede crear el PQRS ");
         }
 
         List<Pqrs> pqrsList = pqrsRepository.findAllByCita_Paciente_IdAndEstadoPqrsOrEstadoPqrs(opcional.get().getPaciente().getId(), EstadoPqrs.NUEVO, EstadoPqrs.EN_PROCESO);
@@ -377,6 +373,14 @@ public class PacienteServicioImpl implements PacienteServicio {
 
         if (respuestaAdmin.isEmpty()) {
             throw new Exception("No existe una respuesta con ese codigo");
+        }
+
+        //Esta variable almacena el numero de veces que aparece la respuesta del admin en una
+        //respuesta paciente si es 1 no se puede responder, si es 0 si
+        long numRespuestas = respuestaPacienteRepository.contarRespuestas(respuestaAdmin.get().getId());
+
+        if(numRespuestas!=0){
+            throw new Exception("No puedes responder más de una vez, debes esperar a que el admin te conteste");
         }
 
         Optional<Paciente> paciente = pacienteRepository.findById(respuestaPqrsDTO.codigoPaciente());
@@ -448,15 +452,40 @@ public class PacienteServicioImpl implements PacienteServicio {
     @Override
     public List<ItemConsultaPacienteDTO> buscarConsulta(BusquedaConsultaDTO busquedaConsultaDTO) throws Exception {
 
-        List<Consulta> consultas;
+        List<Consulta> consultas = new ArrayList<>();
 
-        if((busquedaConsultaDTO.nombreMedico()==null && busquedaConsultaDTO.fecha()!=null) || (busquedaConsultaDTO.nombreMedico()!=null && busquedaConsultaDTO.fecha()==null)){
+
+        if((busquedaConsultaDTO.nombreMedico().isEmpty() && busquedaConsultaDTO.fecha()!=null) || (!busquedaConsultaDTO.nombreMedico().isEmpty() && busquedaConsultaDTO.fecha()==null)){
             consultas = consultaRepository.buscarConsulta(busquedaConsultaDTO.nombreMedico(), busquedaConsultaDTO.fecha(), busquedaConsultaDTO.idPaciente());
-        }else if(busquedaConsultaDTO.nombreMedico()!=null && busquedaConsultaDTO.fecha()!=null) {
+
+        }else if(!busquedaConsultaDTO.nombreMedico().isEmpty() && busquedaConsultaDTO.fecha()!=null) {
             consultas = consultaRepository.buscarConsulta2(busquedaConsultaDTO.nombreMedico(), busquedaConsultaDTO.fecha(), busquedaConsultaDTO.idPaciente());
+
         }else{
             throw new Exception("Selecciona el nombre del médico o una fecha");
         }
+
+        if(consultas.isEmpty()){
+            throw new Exception("No tienes consultas con esos atributos de busqueda");
+        }
+
+        List<ItemConsultaPacienteDTO> consultaPacienteDTOS = new ArrayList<>();
+
+        for (Consulta consulta : consultas) {
+            consultaPacienteDTOS.add(new ItemConsultaPacienteDTO(consulta.getId(),
+                    consulta.getFecha(), consulta.getCita().getMedico().getNombreCompleto(),
+                    consulta.getDiagnostico(), consulta.getNotasMedico(), consulta.getSintomas()));
+        }
+
+        return consultaPacienteDTOS;
+    }
+
+    @Override
+    public List<ItemConsultaPacienteDTO> listarConsultasPaciente(int codigoPaciente) throws Exception {
+
+        List<Consulta> consultas;
+
+        consultas = consultaRepository.findAllByPaciente_Id(codigoPaciente);
 
         if(consultas.isEmpty()){
             throw new Exception("No tienes consultas");
@@ -467,7 +496,7 @@ public class PacienteServicioImpl implements PacienteServicio {
         for (Consulta consulta : consultas) {
             consultaPacienteDTOS.add(new ItemConsultaPacienteDTO(consulta.getId(),
                     consulta.getFecha(), consulta.getCita().getMedico().getNombreCompleto(),
-                    consulta.getDiagnostico(), consulta.getSintomas()));
+                    consulta.getDiagnostico(), consulta.getNotasMedico(), consulta.getSintomas()));
         }
 
         return consultaPacienteDTOS;

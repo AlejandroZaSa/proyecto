@@ -4,6 +4,7 @@ import co.edu.uniquindio.proyecto.dto.admin.*;
 import co.edu.uniquindio.proyecto.dto.autenticacionJwt.MensajeDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemPqrsDTO;
 import co.edu.uniquindio.proyecto.servicios.interfaces.AdministradorServicio;
+import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 public class AdministradorController {
 
     private final AdministradorServicio administradorServicio;
+    private final ClinicaServicio clinicaServicio;
 
     @PostMapping("/registrar-medico")
     public ResponseEntity<MensajeDTO<String>> crearMedico(@Valid @RequestBody RegistroMedicoDTO medicoDTO) throws Exception{
@@ -71,5 +73,10 @@ public class AdministradorController {
     @GetMapping("/listar-citas")
     public ResponseEntity<MensajeDTO<List<ItemCitaAdminDTO>>> listarCitas() throws Exception{
         return ResponseEntity.ok().body(new MensajeDTO<>(false, administradorServicio.listarCitas()));
+    }
+
+    @GetMapping("/historial-mensajes-pqrs/{codigoPqrs}")
+    public ResponseEntity<co.edu.uniquindio.proyecto.dto.autenticacionJwt.MensajeDTO<List<co.edu.uniquindio.proyecto.dto.clinica.MensajeDTO>>> mostrarHistorialMensajesPqrs(@PathVariable int codigoPqrs) throws Exception {
+        return ResponseEntity.ok().body( new co.edu.uniquindio.proyecto.dto.autenticacionJwt.MensajeDTO<>(false, clinicaServicio.mostrarHistorialMensajesPqrs(codigoPqrs)));
     }
 }

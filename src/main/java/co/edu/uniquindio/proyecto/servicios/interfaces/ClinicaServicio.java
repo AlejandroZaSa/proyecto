@@ -4,16 +4,15 @@ import co.edu.uniquindio.proyecto.dto.clinica.CambioPasswordDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.EpsDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.MensajeDTO;
-import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
-import co.edu.uniquindio.proyecto.modelo.enums.Medicamento;
-import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
+import co.edu.uniquindio.proyecto.modelo.enums.*;
 
 import java.util.List;
 
 public interface ClinicaServicio {
 
     List<EstadoPqrs> cargarListaEstadosPqrs();
+
+    List<Especialidad> cargarEspecialidades();
 
     List<TipoSangre> cargarTiposSangre();
 

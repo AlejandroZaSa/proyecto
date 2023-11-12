@@ -1,17 +1,15 @@
 package co.edu.uniquindio.proyecto.controladores;
 
 import co.edu.uniquindio.proyecto.dto.autenticacionJwt.MensajeDTO;
+import co.edu.uniquindio.proyecto.dto.clinica.CambioPasswordDTO;
 import co.edu.uniquindio.proyecto.dto.clinica.EpsDTO;
-import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
-import co.edu.uniquindio.proyecto.modelo.enums.Medicamento;
-import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
+import co.edu.uniquindio.proyecto.dto.clinica.ItemTratamientoDTO;
+import co.edu.uniquindio.proyecto.modelo.enums.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -45,5 +43,16 @@ public class ClinicaController {
     @GetMapping("/ciudades")
     public ResponseEntity<MensajeDTO<List<Ciudad>>> cargarCiudades(){
         return ResponseEntity.ok().body( new MensajeDTO<>(false, clinicaServicio.cargarCiudades()));
+    }
+
+    @GetMapping("/especialidades")
+    public ResponseEntity<MensajeDTO<List<Especialidad>>> cargarEspecialidades(){
+        return ResponseEntity.ok().body( new MensajeDTO<>(false, clinicaServicio.cargarEspecialidades()));
+    }
+
+    @GetMapping("/enviar-link-recuperacion/{email}")
+    public ResponseEntity<MensajeDTO<String>> enviarLinkRecuperacion(@PathVariable String email) throws Exception{
+        clinicaServicio.enviarLinkRecuperacion(email);
+        return ResponseEntity.ok().body( new MensajeDTO<>(false, "Revisa el correo e ingresa al link de recuperación enviado"));
     }
 }

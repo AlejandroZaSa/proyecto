@@ -40,7 +40,7 @@ public class MedicoController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, medicoServicio.listarCitaPaciente(codigoPaciente)));
     }
 
-    @PostMapping("/agendar-libre")
+    @PostMapping("/agendar-dia-libre")
     public ResponseEntity<MensajeDTO<String>> agendarDiaLibre(@Valid @RequestBody DiaLibreDTO diaLibreDTO) throws Exception {
         medicoServicio.agendarDiaLibre(diaLibreDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Dia libre programado con éxito"));
@@ -62,13 +62,13 @@ public class MedicoController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, medicoServicio.mostrarDetalleFactura(codigoConsulta)));
     }
 
-    @GetMapping("/historial-mensajes-pqrs/{codigoPqrs}")
-    public ResponseEntity<co.edu.uniquindio.proyecto.dto.autenticacionJwt.MensajeDTO<List<co.edu.uniquindio.proyecto.dto.clinica.MensajeDTO>>> mostrarHistorialMensajesPqrs(@PathVariable int codigoPqrs) throws Exception {
-        return ResponseEntity.ok().body( new co.edu.uniquindio.proyecto.dto.autenticacionJwt.MensajeDTO<>(false, clinicaServicio.mostrarHistorialMensajesPqrs(codigoPqrs)));
-    }
-
     @GetMapping("/tratamiento/{codigoConsulta}")
     public ResponseEntity<MensajeDTO<List<ItemTratamientoDTO>>> verTratamiento(@PathVariable int codigoConsulta) throws Exception {
         return ResponseEntity.ok().body( new MensajeDTO<>(false, clinicaServicio.verTratamiento(codigoConsulta)));
+    }
+
+    @GetMapping("/listar-dias-libres/{codigoMedico}")
+    public ResponseEntity<MensajeDTO<List<DiaLibreDTO>>> listarDiasLibres(@PathVariable int codigoMedico) throws Exception {
+        return ResponseEntity.ok().body( new MensajeDTO<>(false, medicoServicio.listarDiasLibres(codigoMedico)));
     }
 }

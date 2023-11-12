@@ -28,6 +28,7 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
 
     @Override
     public TokenDTO login(LoginDTO loginDTO) throws Exception {
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         Object[] datos = buscarCorreo(loginDTO);

@@ -122,6 +122,11 @@ public class MedicoServicioImpl implements MedicoServicio {
     @Override
     public int agendarDiaLibre(DiaLibreDTO diaLibreDTO) throws Exception {
 
+        if(diaLibreDTO.fecha().isBefore(LocalDate.now()))
+        {
+            throw new Exception("La fecha es anterior a hoy");
+        }
+
         Optional<Medico> medico = medicoRepository.findById(diaLibreDTO.codigoMedico());
 
         if(medico.isEmpty()){
@@ -218,5 +223,23 @@ public class MedicoServicioImpl implements MedicoServicio {
                 facturaBuscada.getFecha(),
                 facturaBuscada.getValor(),
                 facturaBuscada.getConcepto());
+    }
+
+    @Override
+    public List<DiaLibreDTO> listarDiasLibres(int codigoMedico) throws Exception{
+
+        List<DiaLibre> diasLibres = diaLibreRepository.buscarHistorialDiasLibres(codigoMedico);
+
+        if(diasLibres.isEmpty()){
+            throw new Exception("No tienes historial de días libres");
+        }
+
+        List<DiaLibreDTO> diaLibreDTOS = new ArrayList<>();
+
+        for(DiaLibre diaLibre: diasLibres){
+            diaLibreDTOS.add(new DiaLibreDTO(diaLibre.getMedico().getId(),diaLibre.getFecha()));
+        }
+
+        return diaLibreDTOS;
     }
 }

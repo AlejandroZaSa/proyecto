@@ -1,11 +1,9 @@
 package co.edu.uniquindio.proyecto.servicios.implementacion;
 
 import co.edu.uniquindio.proyecto.dto.clinica.*;
+import co.edu.uniquindio.proyecto.dto.medico.DiaLibreDTO;
 import co.edu.uniquindio.proyecto.modelo.entidades.*;
-import co.edu.uniquindio.proyecto.modelo.enums.Ciudad;
-import co.edu.uniquindio.proyecto.modelo.enums.EstadoPqrs;
-import co.edu.uniquindio.proyecto.modelo.enums.Medicamento;
-import co.edu.uniquindio.proyecto.modelo.enums.TipoSangre;
+import co.edu.uniquindio.proyecto.modelo.enums.*;
 import co.edu.uniquindio.proyecto.repositorios.*;
 import co.edu.uniquindio.proyecto.servicios.interfaces.ClinicaServicio;
 import co.edu.uniquindio.proyecto.servicios.interfaces.EmailServicio;
@@ -37,6 +35,12 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     public List<TipoSangre> cargarTiposSangre() {
 
         return List.of(TipoSangre.values());
+    }
+
+    @Override
+    public List<Especialidad> cargarEspecialidades() {
+
+        return List.of(Especialidad.values());
     }
 
     @Override
@@ -112,7 +116,7 @@ public class ClinicaServicioImpl implements ClinicaServicio {
 
         String parametroEmail = Base64.getEncoder().encodeToString(email.getBytes());
 
-        emailServicio.enviarEmail(new EmailDTO("Recupera tu cuenta", email, "http:/xxxxx/"+parametroEmail));
+        emailServicio.enviarEmail(new EmailDTO("Recupera tu cuenta", email, "http:/localhost:4200/recuperar-password/"+parametroEmail));
 
 
     }

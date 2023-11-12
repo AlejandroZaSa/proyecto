@@ -37,8 +37,9 @@ public class PacienteController {
         return ResponseEntity.ok().body( new MensajeDTO<>(false, pacienteServicio.cargarDatosPaciente(codigoPaciente)));
     }
 
-    @GetMapping("/filtrar-medico-cita")
+    @PostMapping("/filtrar-medico-cita")
     public ResponseEntity<MensajeDTO<List<ItemMedicoCitaDTO>>> filtrarMedicoCita(@Valid @RequestBody FiltroCitaDTO citaDTO) throws Exception {
+        System.out.println("Estoy en controlador"+ citaDTO.fecha()+citaDTO.especialidad());
         return ResponseEntity.ok().body( new MensajeDTO<>(false, pacienteServicio.filtrarMedicoCita(citaDTO)));
     }
 
@@ -49,8 +50,8 @@ public class PacienteController {
     }
 
     @PostMapping("/crear-pqrs")
-    public ResponseEntity<MensajeDTO<String>> crearPqrs(@RequestHeader(name = "Authorization") String autenticacion, @Valid @RequestBody PQRSPacienteDTO pqrsPacienteDTO) throws Exception {
-        pacienteServicio.crearPqrs(autenticacion, pqrsPacienteDTO);
+    public ResponseEntity<MensajeDTO<String>> crearPqrs(@Valid @RequestBody PQRSPacienteDTO pqrsPacienteDTO) throws Exception {
+        pacienteServicio.crearPqrs(pqrsPacienteDTO);
         return ResponseEntity.ok().body( new MensajeDTO<>(false, "Pqrs creada con éxito"));
     }
 
@@ -75,9 +76,15 @@ public class PacienteController {
         return ResponseEntity.ok().body( new MensajeDTO<>(false, pacienteServicio.listarCitasPqrsPaciente(idPaciente)));
     }
 
-    @GetMapping("/buscar-consulta")
+    @PostMapping("/buscar-consulta")
     public ResponseEntity<MensajeDTO<List<ItemConsultaPacienteDTO>>> buscarConsulta(@Valid @RequestBody BusquedaConsultaDTO busquedaConsultaDTO) throws Exception {
+        System.out.println("llegue controlador");
         return ResponseEntity.ok().body( new MensajeDTO<>(false, pacienteServicio.buscarConsulta(busquedaConsultaDTO)));
+    }
+
+    @GetMapping("/listar-consultas-paciente/{idPaciente}")
+    public ResponseEntity<MensajeDTO<List<ItemConsultaPacienteDTO>>> listarConsultasPaciente(@PathVariable int idPaciente) throws Exception {
+        return ResponseEntity.ok().body( new MensajeDTO<>(false, pacienteServicio.listarConsultasPaciente(idPaciente)));
     }
 
     @GetMapping("/historial-mensajes-pqrs/{codigoPqrs}")

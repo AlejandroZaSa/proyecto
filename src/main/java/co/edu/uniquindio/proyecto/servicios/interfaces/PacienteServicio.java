@@ -21,7 +21,7 @@ public interface PacienteServicio {
 
     int agendarCita(CitaDTO citaDTO) throws Exception;
 
-    int crearPqrs(String autenticacion, PQRSPacienteDTO pqrsPacienteDTO) throws Exception;
+    int crearPqrs(PQRSPacienteDTO pqrsPacienteDTO) throws Exception;
 
     List<ItemPqrsDTO> listarPqrsPaciente(int idPaciente) throws Exception;
 
@@ -33,4 +33,5 @@ public interface PacienteServicio {
 
     List<ItemConsultaPacienteDTO> buscarConsulta(BusquedaConsultaDTO busquedaConsultaDTO) throws Exception;
 
+    List<ItemConsultaPacienteDTO> listarConsultasPaciente(int codigoPaciente) throws Exception;
 }

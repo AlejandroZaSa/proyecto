@@ -16,4 +16,6 @@ public interface MedicoServicio {
     int generarFactura(int idConsulta) throws Exception;
 
     DetalleFacturaDTO mostrarDetalleFactura(int codigoConsulta) throws Exception;
+
+    List<DiaLibreDTO> listarDiasLibres(int codigoMedico) throws Exception;
 }
