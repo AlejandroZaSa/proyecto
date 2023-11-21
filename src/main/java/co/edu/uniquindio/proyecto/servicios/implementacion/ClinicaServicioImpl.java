@@ -114,11 +114,28 @@ public class ClinicaServicioImpl implements ClinicaServicio {
     @Override
     public void enviarLinkRecuperacion(String email) throws Exception {
 
-        String parametroEmail = Base64.getEncoder().encodeToString(email.getBytes());
+        Medico medico = medicoRepository.findByEmail(email);
 
-        emailServicio.enviarEmail(new EmailDTO("Recupera tu cuenta", email, "http:/localhost:4200/recuperar-password/"+parametroEmail));
+        if(medico==null){
+            Paciente paciente = pacienteRepository.findByEmail(email);
 
+            if(paciente==null){
+                Administrador admin = adminRepository.findByEmail(email);
 
+                if(admin==null){
+                    throw new Exception("El usuario con el email "+email+" no existe");
+                }else{
+                    //String parametroEmail = Base64.getEncoder().encodeToString(email.getBytes());
+                    emailServicio.enviarEmail(new EmailDTO("Recupera tu cuenta", email, "http:/localhost:4200/recuperar-password/"+email));
+                }
+            }else{
+                //String parametroEmail = Base64.getEncoder().encodeToString(email.getBytes());
+                emailServicio.enviarEmail(new EmailDTO("Recupera tu cuenta", email, "http:/localhost:4200/recuperar-password/"+email));
+            }
+        }else{
+            //String parametroEmail = Base64.getEncoder().encodeToString(email.getBytes());
+            emailServicio.enviarEmail(new EmailDTO("Recupera tu cuenta", email, "http:/localhost:4200/recuperar-password/"+email));
+        }
     }
 
     @Override

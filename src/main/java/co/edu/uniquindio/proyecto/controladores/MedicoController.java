@@ -32,7 +32,7 @@ public class MedicoController {
     @PostMapping("/atender-cita")
     public ResponseEntity<MensajeDTO<String>> atenderCita(@Valid @RequestBody AtencionMedicoDTO atencionMedicoDTO) throws Exception {
         int codigoConsulta = medicoServicio.atenderCita(atencionMedicoDTO);
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Consulta guardada correctamente con código " + codigoConsulta));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Consulta guardada correctamente con código:" + codigoConsulta));
     }
 
     @GetMapping("/listar-cita-paciente/{codigoPaciente}")
@@ -51,7 +51,7 @@ public class MedicoController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, medicoServicio.listarCitasRealizadasMedico(codigoMedico)));
     }
 
-    @PostMapping("/generar-factura/{idConsulta}")
+    @GetMapping("/generar-factura/{idConsulta}")
     public ResponseEntity<MensajeDTO<String>> generarFactura(@PathVariable int idConsulta) throws Exception {
         medicoServicio.generarFactura(idConsulta);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Factura generada con éxito"));

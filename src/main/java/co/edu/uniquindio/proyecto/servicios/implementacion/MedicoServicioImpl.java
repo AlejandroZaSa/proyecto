@@ -32,7 +32,7 @@ public class MedicoServicioImpl implements MedicoServicio {
     @Override
     public List<ItemCitaMedicoDTO> listarCitasPendientes(int codigoMedico) throws Exception {
 
-        List<Cita> citasMedico = citaRepository.findAllByMedico_IdAndFechaGreaterThanEqual(codigoMedico, LocalDate.now());
+        List<Cita> citasMedico = citaRepository.buscarCitasPendientes(codigoMedico, LocalDate.now(), EstadoCita.PROGRAMADA);
 
         if(citasMedico.isEmpty()){
             throw new Exception("No tienes citas");
@@ -196,7 +196,7 @@ public class MedicoServicioImpl implements MedicoServicio {
 
         facturaNuevo.setFecha(LocalDate.now());
         facturaNuevo.setValor(consultaBuscada.getCita().getMedico().getCostoConsulta() - (consultaBuscada.getCita().getMedico().getCostoConsulta()*
-                consultaBuscada.getCita().getPaciente().getEps().getPorcentajeConsulta()));
+                (consultaBuscada.getCita().getPaciente().getEps().getPorcentajeConsulta()/100)));
         facturaNuevo.setConcepto("Consulta por: " +consultaBuscada.getCita().getMedico().getEspecialidad());
         facturaNuevo.setConsulta(consultaBuscada);
         Factura facturaRegistrada = facturaRepository.save(facturaNuevo);
